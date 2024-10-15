@@ -1,3 +1,5 @@
+import { Nft } from "@/components/nft";
+
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col" style={{
@@ -16,6 +18,7 @@ export default function Home() {
               <div className="bg-[#1A1A1A] rounded-[13.183px] border-[0.412px] border-[#3A3A3A] flex-1 overflow-hidden relative">
                 <div className="h-full flex flex-col justify-between">
                   {/* NFT Here */}
+                  <Nft />
                 <div className="pb-3 px-[14px] flex items-center justify-between uppercase"><div className="text-[#474747] font-medium"><p className="text-[8px]">POINTS:</p><p className="text-base">0</p></div><div className="text-[#474747] font-medium text-right space-y-1"><p className="text-[8px]">level:easy</p><p className="text-[8px]">14 Sep,3:54pm</p></div></div> 
                 </div>
                 <div className="h-full"></div>
