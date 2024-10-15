@@ -13,7 +13,7 @@ export default function Home() {
       <div className="text-[#848484] px-10 grid place-content-center flex-1">
 
         <div className="">
-          <div className="w-[973px] bg-[#111] rounded-[19.774px] border-[0.412px] border-[#242424] p-[10px] flex gap-[10px]">
+          <div className="w-[712px] bg-[#111] rounded-[19.774px] border-[0.412px] border-[#242424] p-[10px] flex gap-[10px]">
             <div className="flex-1 flex flex-col">
               <TopPanel />
               <Game />
