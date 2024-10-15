@@ -1,12 +1,9 @@
 type NftProps = {
   className?: string;
-  points: number;
-  level: string;
-  time: string;
 }
 
 export function Nft(props: NftProps) {
-  const { className, points, level, time, ...svgProps } = props;
+  const { className, ...svgProps } = props;
   return (
     <svg
       className={`w-full h-[65%] flex-shrink-0 ${className || ''}`}
