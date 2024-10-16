@@ -25,3 +25,6 @@ body {
     text-wrap: balance;
   }
 }
+.tetromino {
+  @apply bg-purple-600 rounded;
+}
