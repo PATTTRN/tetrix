@@ -52,7 +52,26 @@ export const Game: React.FC = () => {
         ]
     };
 
-    const theTetrominos = [
+    
+    useEffect(() => {
+        if (isPlaying && !gameOver) {
+            timerIdRef.current = setInterval(() => {
+                moveDown();
+            }, 1000); // Move the tetromino down every second
+        }
+        return () => {
+            if (timerIdRef.current) {
+                clearInterval(timerIdRef.current);
+            }
+        };
+    }, [isPlaying, gameOver]);
+
+    const moveDown = () => {
+        undraw();
+        currentPositionRef.current += width;
+        draw();
+    };
+const theTetrominos = [
         tetrominoes.L,
         tetrominoes.Z,
         tetrominoes.T,
@@ -64,7 +83,25 @@ export const Game: React.FC = () => {
         return theTetrominos[randomRef.current][currentRotationRef.current];
     }, []);
 
-    const draw = () => {
+    
+    const moveLeft = () => {
+        undraw();
+        currentPositionRef.current -= 1;
+        draw();
+    };
+
+    const moveRight = () => {
+        undraw();
+        currentPositionRef.current += 1;
+        draw();
+    };
+
+    const rotate = () => {
+        undraw();
+        currentRotationRef.current = (currentRotationRef.current + 1) % 4;
+        draw();
+    };
+const draw = () => {
         setSquares(prev => {
             const newSquares = [...prev];
             getCurrentTetromino().forEach(index => {
@@ -169,99 +206,99 @@ export const Game: React.FC = () => {
         }
     }, [squares]);
 
-    const moveDown = useCallback(() => {
-        if (!isPlaying || gameOver) return false;
+    // const moveDown = useCallback(() => {
+    //     if (!isPlaying || gameOver) return false;
 
-        undraw();
-        const newPosition = currentPositionRef.current + width;
+    //     undraw();
+    //     const newPosition = currentPositionRef.current + width;
         
-        if (isValidMove(newPosition)) {
-            currentPositionRef.current = newPosition;
-            draw();
-            return true;
-        } else {
-            draw(); // Redraw at current position
+    //     if (isValidMove(newPosition)) {
+    //         currentPositionRef.current = newPosition;
+    //         draw();
+    //         return true;
+    //     } else {
+    //         draw(); // Redraw at current position
             
-            // Freeze the piece
-            setSquares(prev => {
-                const newSquares = [...prev];
-                getCurrentTetromino().forEach(index => {
-                    const position = currentPositionRef.current + index;
-                    if (position >= 0 && position < 200) {
-                        newSquares[position] = colors[randomRef.current] + ' taken';
-                    }
-                });
-                return newSquares;
-            });
+    //         // Freeze the piece
+    //         setSquares(prev => {
+    //             const newSquares = [...prev];
+    //             getCurrentTetromino().forEach(index => {
+    //                 const position = currentPositionRef.current + index;
+    //                 if (position >= 0 && position < 200) {
+    //                     newSquares[position] = colors[randomRef.current] + ' taken';
+    //                 }
+    //             });
+    //             return newSquares;
+    //         });
 
-            // Check for game over
-            if (checkGameOver()) {
-                setGameOver(true);
-                setIsPlaying(false);
-                if (timerIdRef.current) {
-                    clearInterval(timerIdRef.current);
-                    timerIdRef.current = null;
-                }
-                return false;
-            }
+    //         // Check for game over
+    //         if (checkGameOver()) {
+    //             setGameOver(true);
+    //             setIsPlaying(false);
+    //             if (timerIdRef.current) {
+    //                 clearInterval(timerIdRef.current);
+    //                 timerIdRef.current = null;
+    //             }
+    //             return false;
+    //         }
 
-            // Start new piece
-            currentPositionRef.current = 4;
-            currentRotationRef.current = 0;
-            randomRef.current = nextRandomRef.current;
-            nextRandomRef.current = Math.floor(Math.random() * 5);
+    //         // Start new piece
+    //         currentPositionRef.current = 4;
+    //         currentRotationRef.current = 0;
+    //         randomRef.current = nextRandomRef.current;
+    //         nextRandomRef.current = Math.floor(Math.random() * 5);
             
-            checkRows();
-            updateDisplayShape();
-            draw();
-            return false;
-        }
-    }, [draw, undraw, getCurrentTetromino, isValidMove, isPlaying, gameOver, checkGameOver, checkRows, updateDisplayShape]);
+    //         checkRows();
+    //         updateDisplayShape();
+    //         draw();
+    //         return false;
+    //     }
+    // }, [draw, undraw, getCurrentTetromino, isValidMove, isPlaying, gameOver, checkGameOver, checkRows, updateDisplayShape]);
 
-    const moveLeft = useCallback(() => {
-        if (!isPlaying || gameOver) return;
+    // const moveLeft = useCallback(() => {
+    //     if (!isPlaying || gameOver) return;
         
-        undraw();
-        const newPosition = currentPositionRef.current - 1;
-        if (isValidMove(newPosition)) {
-            currentPositionRef.current = newPosition;
-        }
-        draw();
-    }, [draw, undraw, isValidMove, isPlaying, gameOver]);
+    //     undraw();
+    //     const newPosition = currentPositionRef.current - 1;
+    //     if (isValidMove(newPosition)) {
+    //         currentPositionRef.current = newPosition;
+    //     }
+    //     draw();
+    // }, [draw, undraw, isValidMove, isPlaying, gameOver]);
 
-    const moveRight = useCallback(() => {
-        if (!isPlaying || gameOver) return;
+    // const moveRight = useCallback(() => {
+    //     if (!isPlaying || gameOver) return;
         
-        undraw();
-        const newPosition = currentPositionRef.current + 1;
-        if (isValidMove(newPosition)) {
-            currentPositionRef.current = newPosition;
-        }
-        draw();
-    }, [draw, undraw, isValidMove, isPlaying, gameOver]);
+    //     undraw();
+    //     const newPosition = currentPositionRef.current + 1;
+    //     if (isValidMove(newPosition)) {
+    //         currentPositionRef.current = newPosition;
+    //     }
+    //     draw();
+    // }, [draw, undraw, isValidMove, isPlaying, gameOver]);
 
-    const rotate = useCallback(() => {
-        if (!isPlaying || gameOver) return;
+    // const rotate = useCallback(() => {
+    //     if (!isPlaying || gameOver) return;
         
-        undraw();
-        const nextRotation = (currentRotationRef.current + 1) % 4;
-        const currentTetromino = theTetrominos[randomRef.current][nextRotation];
+    //     undraw();
+    //     const nextRotation = (currentRotationRef.current + 1) % 4;
+    //     const currentTetromino = theTetrominos[randomRef.current][nextRotation];
         
-        // Check if rotation is valid
-        const isValidRotation = currentTetromino.every(index => {
-            const position = currentPositionRef.current + index;
-            return position >= 0 && 
-                   position < 200 && 
-                   !squares[position]?.includes('taken') &&
-                   Math.floor((currentPositionRef.current + index) / width) === 
-                   Math.floor((currentPositionRef.current + currentTetromino[0]) / width);
-        });
+    //     // Check if rotation is valid
+    //     const isValidRotation = currentTetromino.every(index => {
+    //         const position = currentPositionRef.current + index;
+    //         return position >= 0 && 
+    //                position < 200 && 
+    //                !squares[position]?.includes('taken') &&
+    //                Math.floor((currentPositionRef.current + index) / width) === 
+    //                Math.floor((currentPositionRef.current + currentTetromino[0]) / width);
+    //     });
 
-        if (isValidRotation) {
-            currentRotationRef.current = nextRotation;
-        }
-        draw();
-    }, [draw, undraw, squares, isPlaying, gameOver]);
+    //     if (isValidRotation) {
+    //         currentRotationRef.current = nextRotation;
+    //     }
+    //     draw();
+    // }, [draw, undraw, squares, isPlaying, gameOver]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -307,7 +344,7 @@ export const Game: React.FC = () => {
                 timerIdRef.current = null;
             }
         };
-    }, [isPlaying, gameOver, moveDown, draw, updateDisplayShape, timerIdRef]);
+    }, [isPlaying, gameOver, moveDown, draw, updateDisplayShape]);
 
     const togglePlay = () => {
         if (gameOver) {
@@ -357,7 +394,7 @@ export const Game: React.FC = () => {
                             <div 
                                 key={index} 
                                 className="w-[20px] h-[20px]"
-                                style={{ backgroundColor: color }
+                                style={{ backgroundColor: color }}
                             />
                         ))}
                     </div>
