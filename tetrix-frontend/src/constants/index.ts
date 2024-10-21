@@ -3,9 +3,14 @@ export const BOARD_H = 20;
 export const BOARD_COLOR = 'transparent';
 
 export const PIECES = {
-    R: {
+    I: {
         color: 'red',
-        shape: [[1, 1, 1]]
+        shape: [
+            [1],
+            [1],
+            [1],
+            [1],
+        ]
     },
     L: {
         color: 'green',
@@ -20,6 +25,20 @@ export const PIECES = {
         shape: [
             [1, 1, 1],
             [0, 1, 0]
+        ]
+    },
+    O: {
+        color: 'blue',
+        shape: [
+            [1, 1],
+            [1, 1],
+        ]
+    },
+    Z: {
+        color: 'purple',
+        shape: [
+            [1, 1, 0],
+            [0, 1, 1],
         ]
     },
 }

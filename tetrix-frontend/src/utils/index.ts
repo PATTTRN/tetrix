@@ -1,6 +1,19 @@
 import { BOARD_COLOR, BOARD_H, BOARD_W, PIECES } from "@/constants";
 import { Board, GameState, GameStatus, Movement } from "@/types";
-// import {Tet}
+
+
+let globalScore = 0;
+let highScore = 0;
+
+// Initialize high score from localStorage
+const initializeHighScore = () => {
+    const storedHighScore = localStorage.getItem('tetrisHighScore');
+    if (storedHighScore) {
+      highScore = parseInt(storedHighScore, 10);
+    }
+};
+
+initializeHighScore();
 
 const createBoard = (h = BOARD_H, w = BOARD_W): Board => {
   return Array.from(Array(h), () =>
@@ -95,6 +108,23 @@ const checkCollision = (state: GameState) => {
   return false;
 };
 
+export const getScore = (): number => {
+  return globalScore;
+};
+
+export const getHighScore = (): number => {
+  return highScore;
+};
+
+const updateHighScore = (newScore: number) => {
+  if (newScore > highScore) {
+    highScore = newScore;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('tetrisHighScore', highScore.toString());
+    }
+  }
+};
+
 export const move = (
   state: GameState,
   movement: Movement,
@@ -118,6 +148,8 @@ export const move = (
 
   if (checkCollision({ ...state, position: newPosition })) {
     if (isAdd) {
+      // Update high score when the game ends
+      updateHighScore(globalScore);
       return { ...state, status: GameStatus.OVER };
     }
     if (movement.dy) {
@@ -133,8 +165,14 @@ export const move = (
         row => row.every(cell => cell.fixed)
     ).length;
 
+    console.log("rows", completedRows)
+
     // Calculate new score
-    state.score = score + (completedRows * 10);
+    // globalScore = score + (completedRows * 10);
+    globalScore = score + (completedRows * 10);completedRows * 10;
+    const newScore = globalScore;
+    // Update high score
+    updateHighScore(newScore);
 
     const nonFixedRows = fixedBoard.filter(
     (row) => !row.every((cell) => cell.fixed)
@@ -152,6 +190,7 @@ export const move = (
         piece: getRandomPiece(),
         board: newBoard,
         position: { x: 4, y: 0 },
+        score: newScore
     },
     { dx: 0, dy: 0 },
     true
