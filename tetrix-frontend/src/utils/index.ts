@@ -38,6 +38,7 @@ export const getInitialState = (): GameState => {
   return {
     board: createBoard(),
     piece: getRandomPiece(),
+    nextPiece: getRandomPiece(),
     position: { x: 4, y: 0 },
     status: GameStatus.PENDING,
     score: 0
@@ -125,12 +126,28 @@ const updateHighScore = (newScore: number) => {
   }
 };
 
+export const reseteGame = (): GameState => {
+  // Update high score before resetting
+  updateHighScore(globalScore);
+  
+  // Reset global score to 0
+  globalScore = 0;
+  
+  // Create a new initial game state
+  const newState = getInitialState();
+  
+  // Ensure the score in the new state is 0
+  newState.score = 0;
+  
+  return newState;
+};
+
 export const move = (
   state: GameState,
   movement: Movement,
   isAdd = false
 ): GameState => {
-  const { position, board, score } = state;
+  const { position, board, score, nextPiece } = state;
 
   let newPosition;
 
@@ -187,7 +204,8 @@ export const move = (
     return move(
     {
         ...state,
-        piece: getRandomPiece(),
+        piece: nextPiece, // Use the next piece as the current piece
+        nextPiece: getRandomPiece(), // Get a new next piece
         board: newBoard,
         position: { x: 4, y: 0 },
         score: newScore
@@ -208,6 +226,29 @@ export const move = (
     position: newPosition,
     board: dBoard,
   };
+};
+
+// Add function to get a preview board for the next piece
+export const getNextPieceBoard = (piece: { shape: string | any[]; color: any; }): Board => {
+  // Create a small board just big enough for the piece (usually 4x4)
+  const previewBoard = createBoard(4, 4);
+  
+  // Draw the piece in the center of the preview board
+  for (let y = 0; y < piece.shape.length; y++) {
+    const row = piece.shape[y];
+    for (let x = 0; x < row.length; x++) {
+      const value = row[x];
+      if (value) {
+        previewBoard[y][x] = {
+          filled: true,
+          fixed: false,
+          color: piece.color,
+        };
+      }
+    }
+  }
+  
+  return previewBoard;
 };
 
 export const rotate = (state: GameState) => {

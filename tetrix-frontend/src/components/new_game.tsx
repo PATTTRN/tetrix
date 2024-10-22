@@ -7,7 +7,7 @@ export default function Game() {
 
     return (
         <main className="flex h-full flex-col items-center justify-center">
-            {/* {status === GameStatus.PLAYING && ( */}
+            {status === GameStatus.OVER ? <p>Game Over</p>: (
                 <div className="w-[400px] h-full flex flex-col border-l border-t border-gray-400">
                     {board.map((row: any[], y: number) => {
                         return (
@@ -25,7 +25,7 @@ export default function Game() {
                         )
                     })}
                 </div>
-            {/* )} */}
+            )}
         </main>
     )
 }

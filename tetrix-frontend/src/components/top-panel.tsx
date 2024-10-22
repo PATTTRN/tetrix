@@ -2,10 +2,10 @@
 import { Life } from "./life"
 import { useTetrisContext } from "@/context/TetrisContext"
 import { GameStatus, GameState } from "@/types"
-import {getScore, getHighScore} from "@/utils"
+import {getScore, getHighScore, reseteGame} from "@/utils"
 
 export const TopPanel = ({gameState}: {gameState: GameState}) => {
-    const { status, startGame, resetGame, pauseGame } = useTetrisContext()
+    const { status, startGame, pauseGame, resetGame } = useTetrisContext()
     const score = getScore()
     const highScore = getHighScore()
 
@@ -37,8 +37,8 @@ export const TopPanel = ({gameState}: {gameState: GameState}) => {
                     </div>
                 ) : status === GameStatus.OVER ? (
                     <div className="flex items-center gap-2">
-                        <p>Game Over</p>
-                        <button onClick={resetGame} className="text-white border border-gray rounded-md py-2 px-4">Reset Game</button>
+                        {/* <p>Game Over</p> */}
+                        <button onClick={() => {resetGame(); reseteGame()}} className="text-white border border-gray rounded-md py-2 px-4">Reset Game</button>
                     </div>
                 ) : null}
         </div>

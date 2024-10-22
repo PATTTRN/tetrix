@@ -15,11 +15,11 @@ import { useTetris } from "@/hooks"
 const TetrisContext = createContext()
 
 export const TetrisProvider = ({ children }) => {
-    const { board, status, startGame, resetGame, pauseGame } = useTetris()
+    const { board, status, startGame, resetGame, pauseGame, nextPiece } = useTetris()
     const [scoree, setScoree] = useState(0);
     
     return (
-        <TetrisContext.Provider value={{board, status, startGame, resetGame, pauseGame, scoree, setScoree}}>
+        <TetrisContext.Provider value={{board, status, startGame, resetGame, pauseGame, scoree, setScoree, nextPiece}}>
             {children}
         </TetrisContext.Provider>
     )

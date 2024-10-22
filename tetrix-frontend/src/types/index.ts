@@ -17,12 +17,18 @@ export enum GameStatus {
 export interface GameState {
     status: GameStatus,
     piece: Piece,
+    nextPiece: TetrisPiece;
     position: Position,
     board: Board,
     score: number
 }
 
 export interface Piece {
+    color: string,
+    shape: Array<Array<number>>;
+}
+
+export interface TetrisPiece {
     color: string,
     shape: Array<Array<number>>;
 }

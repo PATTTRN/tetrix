@@ -1,6 +1,6 @@
 import { GameActions, GameActionTypes, GameState, GameStatus, Movement } from "@/types";
 import { getInitialState, move, rotate, pause } from "@/utils";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 
 const initialState = getInitialState();
 
@@ -26,10 +26,15 @@ const gameReducer = (state: GameState, action: GameActions) => {
 
 export const useTetris = () => {
     const [state, setState] = useReducer(gameReducer, initialState);
+    const gameSpeedRef = useRef(500);
+    const gameStartTimeRef = useRef(0);
 
-    const startGame = () => setState({
-        type: GameActionTypes.START
-    })
+    const startGame = () => {
+        gameStartTimeRef.current = Date.now();
+        setState({
+            type: GameActionTypes.START
+        })
+    }
     const pauseGame = () => setState({
         type: GameActionTypes.PAUSE
     })
@@ -42,22 +47,24 @@ export const useTetris = () => {
     const movePiece = (m: Movement) => setState({type :GameActionTypes.MOVE, payload: m})
 
     const keyHandler = (e: KeyboardEvent) => {
-        switch (e.key) {
-            case 'ArrowDown':
-                movePiece({dx: 0, dy: 1})
-                break;
-            case 'ArrowLeft':
-                movePiece({dx: -1, dy: 0})
-                break;
-            case 'ArrowRight':
-                movePiece({dx: 1, dy: 0})
-                break;
-            case 'ArrowUp':
-                rotatePiece()
-                break;
-
-            default:
-                break;
+        if (state.status !== GameStatus.PAUSED) {
+            switch (e.key) {
+                case 'ArrowDown':
+                    movePiece({dx: 0, dy: 1})
+                    break;
+                case 'ArrowLeft':
+                    movePiece({dx: -1, dy: 0})
+                    break;
+                case 'ArrowRight':
+                    movePiece({dx: 1, dy: 0})
+                    break;
+                case 'ArrowUp':
+                    rotatePiece()
+                    break;
+    
+                default:
+                    break;
+            }
         }
     }
 
@@ -71,7 +78,11 @@ export const useTetris = () => {
         let interval: string | number | NodeJS.Timeout | undefined;
 
         if (state.status === GameStatus.PLAYING) {
-            interval = setInterval(() => movePiece({dx: 0, dy: 1}), 500)
+            interval = setInterval(() => movePiece({dx: 0, dy: 1}), gameSpeedRef.current)
+            const elapsedTime = Date.now() - gameStartTimeRef.current;
+            if (elapsedTime >= 60000) {
+                gameSpeedRef.current = Math.max(250, gameSpeedRef.current - 50);
+            }
         }
 
         return () => clearInterval(interval)
@@ -81,6 +92,7 @@ export const useTetris = () => {
         board: state.board,
         status: state.status,
         score: state.score,
+        nextPiece: state.nextPiece,
         startGame,
         resetGame,
         pauseGame
