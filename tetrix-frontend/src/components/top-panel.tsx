@@ -1,10 +1,9 @@
 'use client'
-import { Life } from "./life"
 import { useTetrisContext } from "@/context/TetrisContext"
-import { GameStatus, GameState } from "@/types"
+import { GameStatus } from "@/types"
 import {getScore, getHighScore, reseteGame} from "@/utils"
 
-export const TopPanel = ({gameState}: {gameState: GameState}) => {
+export const TopPanel = () => {
     const { status, startGame, pauseGame, resetGame } = useTetrisContext()
     const score = getScore()
     const highScore = getHighScore()

@@ -1,10 +1,7 @@
 'use client'
-import { useState } from "react";
 import NextPiecePreview from "./preview";
-import { getInitialState } from "@/utils";
 
 export const SidePanel = () => {
-  const [gameState, setGameState] = useState(getInitialState());
   return <div className="w-[200px] flex-shrink-0 flex flex-col gap-[10px]">
     {/* Game Level */}
     <div className="bg-[#1D1D1D] rounded-[13.183px] p-5 border-[0.412px] border-[#3A3A3A]">
@@ -22,7 +19,7 @@ export const SidePanel = () => {
       <div className="h-full flex flex-col justify-between">
         {/* NFT Here */}
         {/* <Nft /> */}
-        <NextPiecePreview gameState={gameState} />
+        <NextPiecePreview />
         <div className="pb-3 px-[14px] flex items-center justify-between uppercase">
           <div className="text-[#474747] font-medium">
             <p className="text-[8px]">POINTS:</p>

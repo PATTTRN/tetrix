@@ -9,10 +9,10 @@ export default function Game() {
         <main className="flex h-full flex-col items-center justify-center">
             {status === GameStatus.OVER ? <p>Game Over</p>: (
                 <div className="w-[400px] h-full flex flex-col border-l border-t border-gray-400">
-                    {board.map((row: any[], y: number) => {
+                    {board.map((row: {filled: boolean, color: string}[], y: number) => {
                         return (
                             <div key={y} className="w-full flex-1 flex">
-                                {row.map((cell: any, x: number) => {
+                                {row.map((cell: {filled: boolean, color: string}, x: number) => {
                                     return (
                                         <div
                                             key={x}

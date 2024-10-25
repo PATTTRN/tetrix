@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 
 export const Game: React.FC = () => {
     const [score, setScore] = useState(0);
@@ -7,10 +7,10 @@ export const Game: React.FC = () => {
     const [displaySquares, setDisplaySquares] = useState<string[]>(Array(16).fill(''));
     const [isPlaying, setIsPlaying] = useState(false);
     const [gameOver, setGameOver] = useState(false);
-
+    
     // Game constants
     const width = 10;
-    const colors = ['orange', 'blue', 'purple', 'red', 'green'];
+    const colors = useMemo(() => ['orange', 'blue', 'purple', 'red', 'green'], []);
     
     // Refs for game state
     const currentPositionRef = useRef(4);
@@ -18,10 +18,11 @@ export const Game: React.FC = () => {
     const randomRef = useRef(Math.floor(Math.random() * 5));
     const nextRandomRef = useRef(Math.floor(Math.random() * 5));
     const timerIdRef = useRef<NodeJS.Timeout | null>(null);
-
-    const tetrominoes = {
-        L: [
-            [1, width + 1, width * 2 + 1, 2],
+    
+    const tetrominoes = useMemo(() => {
+        return {
+            L: [
+                [1, width + 1, width * 2 + 1, 2],
             [width, width + 1, width + 2, width * 2 + 2],
             [1, width + 1, width * 2 + 1, width * 2],
             [width, width * 2, width * 2 + 1, width * 2 + 2]
@@ -50,8 +51,53 @@ export const Game: React.FC = () => {
             [1, width + 1, width * 2 + 1, width * 3 + 1],
             [width, width + 1, width + 2, width + 3]
         ]
-    };
-
+        };
+    }, []);
+    
+    const theTetrominos = useMemo(() => [
+            tetrominoes.L,
+            tetrominoes.Z,
+            tetrominoes.T,
+            tetrominoes.O,
+            tetrominoes.I
+        ], [tetrominoes]);
+    const getCurrentTetromino = useCallback(() => {
+        return theTetrominos[randomRef.current][currentRotationRef.current];
+    }, [theTetrominos]);
+    const draw = useCallback(() => {
+        setSquares(prev => {
+            const newSquares = [...prev];
+            getCurrentTetromino().forEach(index => {
+                const position = currentPositionRef.current + index;
+                if (position >= 0 && position < 200) {
+                    if (!newSquares[position].includes('taken')) {
+                        newSquares[position] = colors[randomRef.current];
+                    }
+                }
+                });
+                return newSquares;
+            });
+        }, [getCurrentTetromino, colors]);
+    
+        const undraw = useCallback(() => {
+            setSquares(prev => {
+                const newSquares = [...prev];
+                getCurrentTetromino().forEach(index => {
+                    const position = currentPositionRef.current + index;
+                    if (position >= 0 && position < 200) {
+                        if (!newSquares[position].includes('taken')) {
+                            newSquares[position] = '';
+                        }
+                    }
+                });
+                return newSquares;
+            });
+        }, [getCurrentTetromino]);
+    const moveDown = useCallback(() => {
+        undraw();
+        currentPositionRef.current += width;
+        draw();
+    }, [draw, undraw]);
     
     useEffect(() => {
         if (isPlaying && !gameOver) {
@@ -64,100 +110,56 @@ export const Game: React.FC = () => {
                 clearInterval(timerIdRef.current);
             }
         };
-    }, [isPlaying, gameOver]);
+    }, [isPlaying, gameOver, moveDown]);
 
-    const moveDown = () => {
-        undraw();
-        currentPositionRef.current += width;
-        draw();
-    };
-const theTetrominos = [
-        tetrominoes.L,
-        tetrominoes.Z,
-        tetrominoes.T,
-        tetrominoes.O,
-        tetrominoes.I
-    ];
 
-    const getCurrentTetromino = useCallback(() => {
-        return theTetrominos[randomRef.current][currentRotationRef.current];
-    }, []);
 
     
-    const moveLeft = () => {
+    const moveLeft = useCallback(() => {
         undraw();
         currentPositionRef.current -= 1;
         draw();
-    };
+    }, [draw, undraw]);
 
-    const moveRight = () => {
+    const moveRight = useCallback(() => {
         undraw();
         currentPositionRef.current += 1;
         draw();
-    };
+    }, [draw, undraw]);
 
-    const rotate = () => {
+    const rotate = useCallback(() => {
         undraw();
         currentRotationRef.current = (currentRotationRef.current + 1) % 4;
         draw();
-    };
-const draw = () => {
-        setSquares(prev => {
-            const newSquares = [...prev];
-            getCurrentTetromino().forEach(index => {
-                const position = currentPositionRef.current + index;
-                if (position >= 0 && position < 200) {
-                    if (!newSquares[position].includes('taken')) {
-                        newSquares[position] = colors[randomRef.current];
-                    }
-                }
-            });
-            return newSquares;
-        });
-    };
+    }, [draw, undraw]);
 
-    const undraw = () => {
-        setSquares(prev => {
-            const newSquares = [...prev];
-            getCurrentTetromino().forEach(index => {
-                const position = currentPositionRef.current + index;
-                if (position >= 0 && position < 200) {
-                    if (!newSquares[position].includes('taken')) {
-                        newSquares[position] = '';
-                    }
-                }
-            });
-            return newSquares;
-        });
-    };
+    // const isValidMove = useCallback((newPosition: number) => {
+    //     return getCurrentTetromino().every(index => {
+    //         const position = newPosition + index;
+    //         // Check bounds
+    //         if (position >= 200) return false;
+    //         if (position < 0) return false;
+            
+    //         // Check if position is taken
+    //         if (squares[position]?.includes('taken')) return false;
+            
+    //         // Check row crossing
+    //         const currentCol = currentPositionRef.current % width;
+    //         const newCol = newPosition % width;
+    //         const pieceCol = (newPosition + index) % width;
+            
+    //         // Prevent wrapping around edges
+    //         if (currentCol < newCol && pieceCol < newCol) return false;
+    //         if (currentCol > newCol && pieceCol > newCol) return false;
+            
+    //         return true;
+    //     });
+    // }, [getCurrentTetromino, squares]);
 
-    const isValidMove = useCallback((newPosition: number) => {
-        return getCurrentTetromino().every(index => {
-            const position = newPosition + index;
-            // Check bounds
-            if (position >= 200) return false;
-            if (position < 0) return false;
-            
-            // Check if position is taken
-            if (squares[position]?.includes('taken')) return false;
-            
-            // Check row crossing
-            const currentCol = currentPositionRef.current % width;
-            const newCol = newPosition % width;
-            const pieceCol = (newPosition + index) % width;
-            
-            // Prevent wrapping around edges
-            if (currentCol < newCol && pieceCol < newCol) return false;
-            if (currentCol > newCol && pieceCol > newCol) return false;
-            
-            return true;
-        });
-    }, [getCurrentTetromino, squares]);
-
-    const checkGameOver = useCallback(() => {
-        // Check if any squares in the top row are taken
-        return squares.slice(0, width).some(square => square.includes('taken'));
-    }, [squares]);
+    // const checkGameOver = useCallback(() => {
+    //     // Check if any squares in the top row are taken
+    //     return squares.slice(0, width).some(square => square.includes('taken'));
+    // }, [squares]);
 
     const updateDisplayShape = useCallback(() => {
         const displayWidth = 4;
@@ -175,36 +177,36 @@ const draw = () => {
             }
             return '';
         }));
-    }, []);
+    }, [colors]);
 
-    const checkRows = useCallback(() => {
-        for (let i = 0; i < 200; i += width) {
-            const row = Array.from({length: width}, (_, j) => i + j);
+    // const checkRows = useCallback(() => {
+    //     for (let i = 0; i < 200; i += width) {
+    //         const row = Array.from({length: width}, (_, j) => i + j);
             
-            if (row.every(index => squares[index].includes('taken'))) {
-                // Increase the score
-                setScore(prev => prev + 10);
+    //         if (row.every(index => squares[index].includes('taken'))) {
+    //             // Increase the score
+    //             setScore(prev => prev + 10);
                 
-                // Remove the row and add empty row at top
-                setSquares(prev => {
-                    const newSquares = [...prev];
-                    row.forEach(index => newSquares[index] = '');
+    //             // Remove the row and add empty row at top
+    //             setSquares(prev => {
+    //                 const newSquares = [...prev];
+    //                 row.forEach(index => newSquares[index] = '');
                     
-                    // Move all rows above down
-                    for (let k = i; k >= width; k -= width) {
-                        for (let j = 0; j < width; j++) {
-                            newSquares[k + j] = newSquares[k - width + j];
-                        }
-                    }
-                    // Clear top row
-                    for (let j = 0; j < width; j++) {
-                        newSquares[j] = '';
-                    }
-                    return newSquares;
-                });
-            }
-        }
-    }, [squares]);
+    //                 // Move all rows above down
+    //                 for (let k = i; k >= width; k -= width) {
+    //                     for (let j = 0; j < width; j++) {
+    //                         newSquares[k + j] = newSquares[k - width + j];
+    //                     }
+    //                 }
+    //                 // Clear top row
+    //                 for (let j = 0; j < width; j++) {
+    //                     newSquares[j] = '';
+    //                 }
+    //                 return newSquares;
+    //             });
+    //         }
+    //     }
+    // }, [squares]);
 
     // const moveDown = useCallback(() => {
     //     if (!isPlaying || gameOver) return false;
@@ -373,7 +375,7 @@ const draw = () => {
                     {isPlaying ? 'Pause' : gameOver ? 'New Game' : 'Start'}
                 </button>
             </div>
-            <div className="grid container flex gap-[50px]">
+            <div className="grid container gap-[50px]">
                 <div className="w-[200px] h-[400px] flex flex-wrap bg-[#111]">
                     {squares.map((color, index) => (
                         <div 

@@ -1,6 +1,6 @@
 import { GameActions, GameActionTypes, GameState, GameStatus, Movement } from "@/types";
-import { getInitialState, move, rotate, pause } from "@/utils";
-import { useEffect, useReducer, useRef } from "react";
+import { getInitialState, move, rotate, } from "@/utils";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 
 const initialState = getInitialState();
 
@@ -46,7 +46,7 @@ export const useTetris = () => {
     })
     const movePiece = (m: Movement) => setState({type :GameActionTypes.MOVE, payload: m})
 
-    const keyHandler = (e: KeyboardEvent) => {
+    const keyHandler = useCallback((e: KeyboardEvent) => {
         if (state.status !== GameStatus.PAUSED) {
             switch (e.key) {
                 case 'ArrowDown':
@@ -61,18 +61,29 @@ export const useTetris = () => {
                 case 'ArrowUp':
                     rotatePiece()
                     break;
-    
+                case 'KeyP':
+                    pauseGame()
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (e.key) {
+                case 'p':
+                case 'P':
+                    startGame()
+                    break;
                 default:
                     break;
             }
         }
-    }
+    }, [state.status])
 
     useEffect(() => {
         window.addEventListener('keydown', keyHandler);
 
         return () => window.removeEventListener('keydown', keyHandler);
-    }, []);
+    }, [keyHandler]);
 
     useEffect(() => {
         let interval: string | number | NodeJS.Timeout | undefined;

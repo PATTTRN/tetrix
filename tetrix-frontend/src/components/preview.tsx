@@ -1,16 +1,9 @@
 import React from 'react';
-import { GameState } from '@/types';
-import { getNextPieceBoard } from "@/utils";
-import { BOARD_COLOR } from "@/constants";
 import { useTetrisContext } from '@/context/TetrisContext';
 
-interface NextPiecePreviewProps {
-  gameState: GameState;
-}
 
-const NextPiecePreview: React.FC<{ gameState: GameState }> = ({ gameState }) => {
-//   const previewBoard = getNextPieceBoard(gameState.nextPiece);
-  const { board, status, startGame, resetGame, pauseGame, nextPiece } = useTetrisContext();
+const NextPiecePreview: React.FC = () => {
+  const { nextPiece } = useTetrisContext();
   const previewSize = 4;
 
   const createEmptyPreviewBoard = () => 
@@ -29,7 +22,7 @@ const NextPiecePreview: React.FC<{ gameState: GameState }> = ({ gameState }) => 
     const offsetY = Math.floor((previewSize - nextPiece.shape.length) / 2);
 
     // Draw the piece
-    nextPiece.shape.forEach((row: any[], y: number) => {
+    nextPiece.shape.forEach((row: string[], y: number) => {
       row.forEach((value, x) => {
         if (value) {
           const previewX = x + offsetX;
