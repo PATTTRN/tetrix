@@ -15,6 +15,7 @@ export enum GameStatus {
 }
 
 export interface GameState {
+    [x: string]: any;
     status: GameStatus,
     piece: Piece,
     nextPiece: TetrisPiece;

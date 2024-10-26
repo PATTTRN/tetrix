@@ -2,9 +2,15 @@
 import { useState } from "react";
 import NextPiecePreview from "./preview";
 import { getInitialState } from "@/utils";
+import { GameStatus } from "@/types"
+import { useTetrisContext } from "@/context/TetrisContext"
+import { Nft } from "./nft";
 
 export const SidePanel = () => {
   const [gameState, setGameState] = useState(getInitialState());
+  const { board, status } = useTetrisContext();
+  const [showDownloadButton, setShowDownloadButton] = useState(false);
+
   return <div className="w-[200px] flex-shrink-0 flex flex-col gap-[10px]">
     {/* Game Level */}
     <div className="bg-[#1D1D1D] rounded-[13.183px] p-5 border-[0.412px] border-[#3A3A3A]">
@@ -23,12 +29,27 @@ export const SidePanel = () => {
         {/* NFT Here */}
         {/* <Nft /> */}
         <NextPiecePreview gameState={gameState} />
+
+        {/* NFT Image */}
+        {status === GameStatus.OVER && <div className="w-full h-full flex flex-col justify-between relative cursor-pointer group"
+             onMouseEnter={() => setShowDownloadButton(true)}
+             onMouseLeave={() => setShowDownloadButton(false)}>
+            <div className="transition-opacity duration-300 group-hover:opacity-70">
+              <Nft />
+            </div>
+            {showDownloadButton && (
+              <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white p-2 rounded">
+                Download
+              </button>
+            )}
+        </div>}
+
         <div className="pb-3 px-[14px] flex items-center justify-between uppercase">
-          <div className="text-[#474747] font-medium">
+          <div className="text-[#ffffff] font-medium">
             <p className="text-[8px]">POINTS:</p>
             <p className="text-base">1000</p>
           </div>
-          <div className="text-[#474747] font-medium text-right space-y-1">
+          <div className="text-[#ffffff] font-medium text-right space-y-1">
             <p className="text-[8px]">level:easy</p>
             <p className="text-[8px]">14 Sep,3:54pm</p>
           </div>

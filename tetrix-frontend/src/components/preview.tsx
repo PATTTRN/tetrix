@@ -47,7 +47,7 @@ const NextPiecePreview: React.FC<{ gameState: GameState }> = ({ gameState }) => 
   }
 
   return (
-    <div className="next-piece-preview h-[20vh] p-4">
+    <div className="next-piece-preview min-h-[20vh] h-[20vh] p-4">
       <h3>Next Piece</h3>
       <div className="w-full h-full flex flex-col border-l border-t border-gray-400">
             {previewBoard.map((row, y) => (
