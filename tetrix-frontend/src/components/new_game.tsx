@@ -8,7 +8,7 @@ export default function Game() {
     const record = exportGameRecord();
 
     const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
-    console.log("records", record, savedRecords)
+    console.log("records", record)
     console.log("saved records", savedRecords)
 
     return (

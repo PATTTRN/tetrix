@@ -48,7 +48,10 @@ const gameReducer = (state: GameState, action: GameActions) => {
             return { ...startState, status: GameStatus.PLAYING, moveRecord: initialPieceType };
         case GameActionTypes.PAUSE:
             const pauseState = move(state, {dx: 0, dy: 0});
-            return { ...pauseState, status: GameStatus.PAUSED };
+            return { ...pauseState, status: GameStatus.PAUSED, moveRecord: state.moveRecord };
+        case GameActionTypes.CONTINUE:
+            const continueState = move(state, {dx: 0, dy: 0});
+            return { ...continueState, status: GameStatus.PLAYING, moveRecord: state.moveRecord };
         case GameActionTypes.RESET:
             const resetState = move(getInitialState(), {dx: 0, dy: 0}) as ExtendedGameState;
             // const initialPieceType = identifyPieceType(resetState.piece);
@@ -92,6 +95,10 @@ export const useTetris = () => {
             type: GameActionTypes.START
         })
     }
+
+    const continueGame = () => setState({
+        type: GameActionTypes.CONTINUE
+    });
     const pauseGame = () => setState({
         type: GameActionTypes.PAUSE
     })
@@ -120,7 +127,7 @@ export const useTetris = () => {
     };
 
     const keyHandler = (e: KeyboardEvent) => {
-        if (state.status !== GameStatus.PAUSED) {
+        // if (state.status !== GameStatus.PAUSED) {
             switch (e.key) {
                 case 'ArrowDown':
                     movePiece({dx: 0, dy: 1})
@@ -134,29 +141,18 @@ export const useTetris = () => {
                 case 'ArrowUp':
                     rotatePiece()
                     break;
-                case 'KeyP':
-                    pauseGame()
-                    break;
+    
                 default:
                     break;
             }
-        } else {
-            switch (e.key) {
-                case 'p':
-                case 'P':
-                    startGame()
-                    break;
-                default:
-                    break;
-            }
-        }
-    }, [state.status])
+        // }
+    }
 
     useEffect(() => {
         window.addEventListener('keydown', keyHandler);
 
         return () => window.removeEventListener('keydown', keyHandler);
-    }, [keyHandler]);
+    }, []);
 
     useEffect(() => {
         let interval: string | number | NodeJS.Timeout | undefined;
@@ -188,6 +184,7 @@ export const useTetris = () => {
         exportGameRecord,
         startGame,
         resetGame,
-        pauseGame
+        pauseGame,
+        continueGame
     }
 }

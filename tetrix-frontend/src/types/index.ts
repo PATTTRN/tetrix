@@ -63,6 +63,11 @@ interface PauseAction {
     payload?: undefined
 }
 
+interface ContinueAction {
+    type: GameActionTypes.CONTINUE,
+    payload?: undefined
+}
+
 interface ResetAction {
     type: GameActionTypes.RESET,
     payload?: undefined
@@ -78,4 +83,4 @@ interface MoveAction {
     payload: Movement
 }
 
-export type GameActions = StartAction | ResetAction | RotateAction | MoveAction| PauseAction
+export type GameActions = StartAction | ResetAction | RotateAction | MoveAction| PauseAction | ContinueAction

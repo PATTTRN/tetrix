@@ -4,6 +4,7 @@ import { getInitialState } from "@/utils";
 import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
 import { Nft } from "./nft";
+import {useState} from 'react'
 
 export const SidePanel = () => {
   const [gameState, setGameState] = useState(getInitialState());
