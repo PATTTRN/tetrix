@@ -3,10 +3,11 @@ import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
 
 export default function Game() {
-    const { board, status, exportGameRecord } = useTetrisContext()
-    const record = exportGameRecord();
+    const { board, status } = useTetrisContext()
+    // const { board, status, exportGameRecord } = useTetrisContext()
+    // const record = exportGameRecord();
 
-    const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
+    // const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
 
     return (
         <main className="flex h-full flex-col items-center justify-center">
