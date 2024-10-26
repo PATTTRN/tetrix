@@ -1,14 +1,12 @@
 'use client'
 import NextPiecePreview from "./preview";
-import { getInitialState } from "@/utils";
 import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
 import { Nft } from "./nft";
 import { useState } from "react";
 
 export const SidePanel = () => {
-  const [tetrisState, setTetrisState] = useState(getInitialState());
-  const { board, status } = useTetrisContext();
+  const { status } = useTetrisContext();
   const [showDownloadButton, setShowDownloadButton] = useState(false);
 
   return <div className="w-[200px] flex-shrink-0 flex flex-col gap-[10px]">

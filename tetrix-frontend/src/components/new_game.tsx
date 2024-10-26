@@ -1,15 +1,16 @@
 'use client'
 import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
-import {useTetris} from "@/hooks/index"
 
 export default function Game() {
-    const { board, status, moveRecord, exportGameRecord } = useTetrisContext()
+    const { board, status, exportGameRecord } = useTetrisContext()
     const record = exportGameRecord();
 
-    const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
-    console.log("records", record, savedRecords)
-    console.log("saved records", savedRecords)
+    if (typeof window !== 'undefined') {
+        const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
+        console.log("records", record, savedRecords)
+        console.log("saved records", savedRecords)
+    }
 
     return (
         <main className="flex h-full flex-col items-center justify-center">

@@ -15,10 +15,10 @@ export enum GameStatus {
 }
 
 export interface GameState {
-    [x: string]: any;
+    [x: string]: string | number | GameStatus | Piece | TetrisPiece | Position | Board;
     status: GameStatus,
     piece: Piece,
-    nextPiece: TetrisPiece;
+    nextPiece: TetrisPiece,
     position: Position,
     board: Board,
     score: number
