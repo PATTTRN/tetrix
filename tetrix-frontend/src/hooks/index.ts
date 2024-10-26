@@ -134,18 +134,29 @@ export const useTetris = () => {
                 case 'ArrowUp':
                     rotatePiece()
                     break;
-    
+                case 'KeyP':
+                    pauseGame()
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (e.key) {
+                case 'p':
+                case 'P':
+                    startGame()
+                    break;
                 default:
                     break;
             }
         }
-    }
+    }, [state.status])
 
     useEffect(() => {
         window.addEventListener('keydown', keyHandler);
 
         return () => window.removeEventListener('keydown', keyHandler);
-    }, []);
+    }, [keyHandler]);
 
     useEffect(() => {
         let interval: string | number | NodeJS.Timeout | undefined;

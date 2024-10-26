@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 
 export const Game: React.FC = () => {
     const [score, setScore] = useState(0);
@@ -10,7 +10,7 @@ export const Game: React.FC = () => {
 
     // Game constants
     const width = 10;
-    const colors = ['orange', 'blue', 'purple', 'red', 'green'];
+    const colors = useMemo(() => ['orange', 'blue', 'purple', 'red', 'green'], []);
     
     // Refs for game state
     const currentPositionRef = useRef(4);
@@ -19,9 +19,10 @@ export const Game: React.FC = () => {
     const nextRandomRef = useRef(Math.floor(Math.random() * 5));
     const timerIdRef = useRef<NodeJS.Timeout | null>(null);
 
-    const tetrominoes = {
-        L: [
-            [1, width + 1, width * 2 + 1, 2],
+    const tetrominoes = useMemo(() => {
+        return {
+            L: [
+                [1, width + 1, width * 2 + 1, 2],
             [width, width + 1, width + 2, width * 2 + 2],
             [1, width + 1, width * 2 + 1, width * 2],
             [width, width * 2, width * 2 + 1, width * 2 + 2]
@@ -49,22 +50,23 @@ export const Game: React.FC = () => {
             [width, width + 1, width + 2, width + 3],
             [1, width + 1, width * 2 + 1, width * 3 + 1],
             [width, width + 1, width + 2, width + 3]
-        ]
-    };
+            ]
+        };
+    }, []) ;
 
-    const theTetrominos = [
+    const theTetrominos = useMemo(() => [
         tetrominoes.L,
         tetrominoes.Z,
         tetrominoes.T,
         tetrominoes.O,
         tetrominoes.I
-    ];
+    ], [tetrominoes]);
 
     const getCurrentTetromino = useCallback(() => {
         return theTetrominos[randomRef.current][currentRotationRef.current];
-    }, []);
+    }, [theTetrominos]);
 
-    const draw = () => {
+    const draw = useCallback(() => {
         setSquares(prev => {
             const newSquares = [...prev];
             getCurrentTetromino().forEach(index => {
@@ -77,9 +79,9 @@ export const Game: React.FC = () => {
             });
             return newSquares;
         });
-    };
+    }, [getCurrentTetromino, colors]);
 
-    const undraw = () => {
+    const undraw = useCallback(() => {
         setSquares(prev => {
             const newSquares = [...prev];
             getCurrentTetromino().forEach(index => {
@@ -92,7 +94,7 @@ export const Game: React.FC = () => {
             });
             return newSquares;
         });
-    };
+    }, [getCurrentTetromino]);
 
     const isValidMove = useCallback((newPosition: number) => {
         return getCurrentTetromino().every(index => {
@@ -138,7 +140,7 @@ export const Game: React.FC = () => {
             }
             return '';
         }));
-    }, []);
+    }, [colors]);
 
     const checkRows = useCallback(() => {
         for (let i = 0; i < 200; i += width) {
@@ -216,7 +218,7 @@ export const Game: React.FC = () => {
             draw();
             return false;
         }
-    }, [draw, undraw, getCurrentTetromino, isValidMove, isPlaying, gameOver, checkGameOver, checkRows, updateDisplayShape]);
+    }, [draw, undraw, getCurrentTetromino, isValidMove, isPlaying, gameOver, checkGameOver, checkRows, updateDisplayShape, colors]);
 
     const moveLeft = useCallback(() => {
         if (!isPlaying || gameOver) return;
@@ -261,7 +263,7 @@ export const Game: React.FC = () => {
             currentRotationRef.current = nextRotation;
         }
         draw();
-    }, [draw, undraw, squares, isPlaying, gameOver]);
+    }, [draw, undraw, squares, isPlaying, gameOver, theTetrominos]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -357,7 +359,7 @@ export const Game: React.FC = () => {
                             <div 
                                 key={index} 
                                 className="w-[20px] h-[20px]"
-                                style={{ backgroundColor: color }
+                                style={{ backgroundColor: color }}
                             />
                         ))}
                     </div>

@@ -1,15 +1,11 @@
 'use client'
 import { Controller } from "@/components/controller";
 import Game from "@/components/new_game";
-import { Life } from "@/components/life";
 import { SidePanel } from "@/components/side-panel";
 import { TopPanel } from "@/components/top-panel";
 import { TetrisProvider } from "@/context/TetrisContext";
-import { getInitialState, move } from "@/utils";
-import {useState} from "react";
 
 export default function Home() {
-  const [gameState, setGameState] = useState(getInitialState());
   return (
     <TetrisProvider>
     <div className="max-h-screen h-screen overflow-hidden flex flex-col" style={{
@@ -21,7 +17,7 @@ export default function Home() {
         <div className="">
           <div className="w-[712px] bg-[#111] h-[85vh] rounded-[19.774px] border-[0.412px] border-[#242424] p-[10px] flex gap-[10px]">
             <div className="flex-1 flex flex-col">
-              <TopPanel gameState={gameState} />
+              <TopPanel />
               <Game />
             </div>
             <SidePanel />

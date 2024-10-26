@@ -7,10 +7,12 @@ let highScore = 0;
 
 // Initialize high score from localStorage
 const initializeHighScore = () => {
+  if (typeof window !== 'undefined') {
     const storedHighScore = localStorage.getItem('tetrisHighScore');
     if (storedHighScore) {
       highScore = parseInt(storedHighScore, 10);
     }
+  }
 };
 
 initializeHighScore();
@@ -186,7 +188,7 @@ export const move = (
 
     // Calculate new score
     // globalScore = score + (completedRows * 10);
-    globalScore = score + (completedRows * 10);completedRows * 10;
+    globalScore = score + (completedRows * 10);
     const newScore = globalScore;
     // Update high score
     updateHighScore(newScore);
@@ -229,7 +231,7 @@ export const move = (
 };
 
 // Add function to get a preview board for the next piece
-export const getNextPieceBoard = (piece: { shape: string | any[]; color: any; }): Board => {
+export const getNextPieceBoard = (piece: { shape: typeof PIECES[keyof typeof PIECES]['shape']; color: string; }): Board => {
   // Create a small board just big enough for the piece (usually 4x4)
   const previewBoard = createBoard(4, 4);
   
