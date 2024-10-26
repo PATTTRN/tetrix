@@ -161,15 +161,20 @@ export const useTetris = () => {
         let interval: string | number | NodeJS.Timeout | undefined;
 
         if (tetrisState.status === GameStatus.PLAYING) {
-            interval = setInterval(() => movePiece({dx: 0, dy: 1}), gameSpeedRef.current)
-            const elapsedTime = Date.now() - gameStartTimeRef.current;
-            if (elapsedTime >= 60000) {
-                gameSpeedRef.current = Math.max(250, gameSpeedRef.current - 50);
+            // Adjust game speed based on score
+            if (tetrisState.score > 2000) {
+                gameSpeedRef.current = 200; // Fastest speed
+            } else if (tetrisState.score > 1000) {
+                gameSpeedRef.current = 300; // Medium speed
+            } else {
+                gameSpeedRef.current = 500; // Base speed
             }
+
+            interval = setInterval(() => movePiece({dx: 0, dy: 1}), gameSpeedRef.current);
         }
 
         return () => clearInterval(interval)
-    }, [tetrisState.status])
+    }, [tetrisState.status, tetrisState.score])
 
      // Save record when game is over
      useEffect(() => {
@@ -191,4 +196,3 @@ export const useTetris = () => {
         continueGame
     }
 }
-
