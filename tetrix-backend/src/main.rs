@@ -171,20 +171,33 @@ impl Tetris {
                 },
                 '1' => self.current_piece.move_right(),
                 '2' => match self.current_piece.shape {
+                    TetrominoShape::T => {
+                        match self.current_piece.rotation % 4 {
+                            0 => {
+                                self.current_piece.rotate();
+
+                            },
+                            1 => {
+                                self.current_piece.rotate();
+                            },
+                            2 => {
+                                self.current_piece.rotate();
+                            },
+                            _ => {
+                                self.current_piece.rotate();
+                            },
+                        }
+                    },  
                     TetrominoShape::Z => {
                         match self.current_piece.rotation % 4 {
                             0 => {
                                 self.current_piece.rotate();
-                                self.current_piece.move_right();
                             },
                             1 => {
                                 self.current_piece.rotate();
-                                self.current_piece.move_right(); 
                             },
                             2 => {
                                 self.current_piece.rotate();
-                                self.current_piece.move_left(); 
-                                self.current_piece.move_left(); 
                             },
                             _ => {
                                 self.current_piece.rotate();
@@ -229,22 +242,12 @@ pub struct Tetromino {
     shape: TetrominoShape,
     blocks: Vec<(i32, i32)>,
     position: Position,
-    rotation: u32,
+    rotation: usize,
 }
 
 impl Tetromino {
     fn new(shape: TetrominoShape) -> Self {
-        let blocks = match shape {
-            TetrominoShape::I => vec![(0,0), (0,1), (0,2), (0,3)], // I-shape: ████
-            TetrominoShape::O => vec![(0,0), (1,0), (0,1), (1,1)], // O-shape: ██
-                                                                   //          ██
-            TetrominoShape::T => vec![(1,0), (0,1), (1,1), (2,1)], // T-shape:  █
-                                                                   //          ███
-            TetrominoShape::Z => vec![(0,0), (1,0), (1,1), (2,1)], // Z-shape: ██
-                                                                   //           ██
-            TetrominoShape::L => vec![(2,0), (0,1), (1,1), (2,1)], // L-shape:   █
-                                                                   //          ███
-        };
+        let blocks = Self::get_blocks(shape, 0);
         
         Tetromino {
             shape,
@@ -254,6 +257,37 @@ impl Tetromino {
                 col: 4 as isize 
             },
             rotation: 0,
+        }
+    }
+
+    fn get_blocks(shape: TetrominoShape, rotation: usize) -> Vec<(i32, i32)> {
+        let width = BOARD_WIDTH as i32;
+        match shape {
+            TetrominoShape::L => match rotation % 4 {
+                0 => vec![(0, 0), (0, 1), (0, 2), (1, 2)], // └
+                1 => vec![(0, 1), (1, 1), (2, 1), (0, 2)], // ┘
+                2 => vec![(0, 0), (1, 0), (1, 1), (1, 2)], // ┐
+                3 => vec![(2, 0), (0, 1), (1, 1), (2, 1)], // ┌
+                _ => unreachable!(),
+            },
+            TetrominoShape::Z => match rotation % 4 {
+                0 | 2 => vec![(0, 0), (1, 0), (1, 1), (2, 1)],
+                1 | 3 => vec![(0, 1), (1, 0), (1, 1), (0, 2)],
+                _ => unreachable!(),
+            },
+            TetrominoShape::T => match rotation % 4 {
+                0 => vec![(0, 0), (1, 0), (2, 0), (1, 1)],
+                1 => vec![(1, 0), (1, 1), (0, 1), (1, 2)],
+                2 => vec![(0, 1), (1, 1), (2, 1), (1, 0)],
+                3 => vec![(0, 0), (1, 1), (0, 1), (0, 2)],
+                _ => unreachable!(),
+            },
+            TetrominoShape::O => vec![(0, 0), (1, 0), (0, 1), (1, 1)],
+            TetrominoShape::I => match rotation % 4 {
+                0 | 2 => vec![(0, 0), (0, 1), (0, 2), (0, 3)],
+                1 | 3 => vec![(0, 1), (1, 1), (2, 1), (3, 1)],
+                _ => unreachable!(),
+            },
         }
     }
 
@@ -270,12 +304,8 @@ impl Tetromino {
     }
 
     fn rotate(&mut self) {
-        self.blocks = self.rotated_blocks();
-        self.rotation += 1;
-    }
-
-    fn rotated_blocks(&self) -> Vec<(i32, i32)> {
-        self.blocks.iter().map(|&(x, y)| (-y, x)).collect()
+        self.rotation = (self.rotation + 1) % 4;
+        self.blocks = Self::get_blocks(self.shape, self.rotation);
     }
 
     fn with_blocks(&self, new_blocks: Vec<(i32, i32)>) -> Self {
@@ -303,7 +333,9 @@ fn replay_tetris(moves: &str, up_to: Option<usize>) -> u32 {
 }
 
 fn main() {
-    let moves1 = "Z22222224444444444I444O";
+    let _keys = "LZTOISJ";
+    let moves = "T4422242242433343333334444444444444Z444444434344444444444L444422241111144444444444444Z4444444444444444444T444444444444444444O4444444444444444L4444444444444I444444444Z44444444I44444O44T44L4O4L4Z4L";
+    let moves1 = "T442224224243334344Z";
     let moves4 = "O444444444444444444O224444444444444444444O44444444444444433444O4444444444444444333344O4444444444444444411114O44444444444444444114O";
     let moves3 = "T44444444433333433444444444O44444344444444444444Z4414444444414434444444L441411111111444444343433333333344444O4441111411444444444444444L4444334341143444444444Z44344444444444444441414344444444444444O44111111444444444444444L44444111111141111444444444I4441411444444444444T444434333333334444444444444444434411414444444I441411111144444444444L444444444444411411111144O344444444444444444L4444443444444444T44343334141111111444444444Z444444344444444444414344444444I44343333333344444444444Z4444443334333444444I444443343144444444L444444411444444414411444444444T434344444444444I41111141111444444444O44443433333344444444I444411141444444L44433333334444444I414444444444O443443444444444Z4434434333344444I44444444444T444443344444L4141444444444Z444414111444444O44444144444443333333433333344444444343444444L44343333333444T44441144444I44444444414444T4141111144444L4444O4Z";
     let moves2 = "T44444444433333433444444444O44444344444444444444Z4414444444414434444444L441411111111444444343433333333344444O4441111411444444444444444L4444334341143444444444Z44344444444444444441414344444444444444O44111111444444444444444L44444111111141111444444444I4441411444444444444T444434333333334444444444444444434411414444444I441411111144444444444L444444444444411411111144O344444444444444444L4444443444444444T44343334141111111444444444Z444444344444444444414344444444I44343333333344444444444Z4444443334333444444I444443343144444444L444444411444444414411444444444T434344444444444I41111141111444444444O44443433333344444444I444411141444444L44433333334444444I414444444444O443443444444444Z4434434333344444I44444444444T444443344444L4141444444444Z444414111444444O44444144444443333333433333344444444343444444L44343333333444T44441144444I44444444414444T4141111144444L4444O4Z";

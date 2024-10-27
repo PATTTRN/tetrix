@@ -1,5 +1,5 @@
 import { GameActions, GameActionTypes, GameState, GameStatus, Movement } from "@/types";
-import { getInitialState, move, rotate } from "@/utils";
+import { getInitialState, move, rotate, pause, getNextPieceBoard } from "@/utils";
 import { useEffect, useReducer, useRef } from "react";
 import { PIECES } from "@/constants";
 
@@ -23,13 +23,13 @@ const identifyPieceType = (piece: { shape: Array<Array<number>>, color: string }
     return 'O'; // Fallback to a valid piece type if no match found
 };
 
-// const SHAPE_MAPPING: { [key: string]: string } = {
-//     'L': 'L',
-//     'I': 'I',
-//     'O': 'O',
-//     'T': 'T',
-//     'Z': 'Z',
-// };
+const SHAPE_MAPPING: { [key: string]: string } = {
+    'L': 'L',
+    'I': 'I',
+    'O': 'O',
+    'T': 'T',
+    'Z': 'Z',
+};
 
 interface ExtendedGameState extends GameState {
     moveRecord: string;
