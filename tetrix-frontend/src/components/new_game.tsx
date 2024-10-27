@@ -1,9 +1,10 @@
 'use client'
 import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
+import { stringify } from "querystring";
 
 export default function Game() {
-    const { board, status, exportGameRecord } = useTetrisContext()
+    const { board, status, exportGameRecord, moveRecord } = useTetrisContext()
     const record = exportGameRecord();
 
     if (typeof window !== 'undefined') {
@@ -14,7 +15,7 @@ export default function Game() {
 
     return (
         <main className="flex h-full flex-col items-center justify-center">
-            {status === GameStatus.OVER ? <p>Game Over</p>: (
+            {status === GameStatus.OVER ? <p>Game Over {record.score} {moveRecord}</p>: (
                 <div className="w-[400px] h-full flex flex-col border-l border-t border-gray-400">
                     {board.map((row: {filled: boolean, color: string}[], y: number) => {
                         return (
