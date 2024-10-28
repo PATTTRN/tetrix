@@ -4,7 +4,7 @@ import { GameStatus } from "@/types"
 import {getScore, getHighScore, reseteGame} from "@/utils"
 
 export const TopPanel = () => {
-    const { status, startGame, pauseGame, resetGame } = useTetrisContext()
+    const { status, startGame, pauseGame, resetGame, continueGame } = useTetrisContext()
     const score = getScore()
     const highScore = getHighScore()
 
@@ -31,7 +31,7 @@ export const TopPanel = () => {
                         PAUSE GAME
                     </div>
                 ) : status === GameStatus.PAUSED ? (
-                    <div onClick={startGame} className="text-white border border-gray rounded-md py-2 px-4">
+                    <div onClick={continueGame} className="text-white border border-gray rounded-md py-2 px-4">
                         CONTINUE
                     </div>
                 ) : status === GameStatus.OVER ? (

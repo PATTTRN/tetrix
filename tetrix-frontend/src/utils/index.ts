@@ -184,8 +184,6 @@ export const move = (
         row => row.every(cell => cell.fixed)
     ).length;
 
-    console.log("rows", completedRows)
-
     // Calculate new score
     // globalScore = score + (completedRows * 10);
     globalScore = score + (completedRows * 10);

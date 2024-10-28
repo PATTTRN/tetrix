@@ -7,11 +7,7 @@ export default function Game() {
     const { board, status, exportGameRecord, moveRecord } = useTetrisContext()
     const record = exportGameRecord();
 
-    if (typeof window !== 'undefined') {
-        const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
-        console.log("records", record, savedRecords)
-        console.log("saved records", savedRecords)
-    }
+    // const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
 
     return (
         <main className="flex h-full flex-col items-center justify-center">
