@@ -1,0 +1,10 @@
+/Users/wisemrmusa/code/projects/patttrn/tetrix/tetrix/tetrix-backend/target/debug/deps/libgetrandom-ff45060a9ed76640.rmeta: /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/lib.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/error.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/util.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/error_impls.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/util_libc.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/getentropy.rs
+
+/Users/wisemrmusa/code/projects/patttrn/tetrix/tetrix/tetrix-backend/target/debug/deps/getrandom-ff45060a9ed76640.d: /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/lib.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/error.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/util.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/error_impls.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/util_libc.rs /Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/getentropy.rs
+
+/Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/lib.rs:
+/Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/error.rs:
+/Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/util.rs:
+/Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/error_impls.rs:
+/Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/util_libc.rs:
+/Users/wisemrmusa/.cargo/registry/src/index.crates.io-6f17d22bba15001f/getrandom-0.2.15/src/getentropy.rs:

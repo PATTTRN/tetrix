@@ -7,9 +7,8 @@ import { useState } from "react";
 import {getScore} from "@/utils"
 
 export const SidePanel = () => {
-  const { status } = useTetrisContext();
+  const { status, score , moveRecord} = useTetrisContext();
   const [showDownloadButton, setShowDownloadButton] = useState(false);
-  const score = getScore()
 
   return <div className="w-[200px] flex-shrink-0 flex flex-col gap-[10px]">
     {/* Game Level */}
@@ -26,6 +25,19 @@ export const SidePanel = () => {
     {/* Game Score */}
     <div className="bg-[#1A1A1A] rounded-[13.183px] border-[0.412px] border-[#3A3A3A] flex-1 overflow-hidden relative">
       <div className="h-full flex flex-col justify-between">
+        {/* Moves */}
+        <div className="flex flex-col gap-2 px-[14px]">
+          {moveRecord && (
+            <p 
+              className="text-[#ffffff] font-medium cursor-pointer whitespace-pre-wrap break-all" 
+              onClick={() => {
+                navigator.clipboard.writeText(moveRecord);               
+              }}
+            >
+              {moveRecord}
+            </p>
+          )}
+        </div>
         {/* NFT Here */}
         {/* <Nft /> */}
         <NextPiecePreview />
@@ -47,7 +59,7 @@ export const SidePanel = () => {
         <div className="pb-3 px-[14px] flex items-center justify-between uppercase">
           <div className="text-[#ffffff] font-medium">
             <p className="text-[8px]">POINTS:</p>
-            <p className="text-base">1000</p>
+            <p className="text-base">{score}</p>
           </div>
           <div className="text-[#ffffff] font-medium text-right space-y-1">
             <p className="text-[8px]">level:easy</p>
