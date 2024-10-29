@@ -10,7 +10,31 @@ tetriX is an on-chain game built on Ethereum blockchain.
 
 
 ## Development
+- run the frontend locally
+- run the backend locally
+- copy the generated moves and score to the generate the proof of game play
+- verify on aligned
+- mint the NFT
 
+## Roadmap
+- make the zkVM more robust and efficient
+- add verifiable randomness 
+- make the proving system automated
+- add more levels
+- add more tetrominos
+- add leaderboard
+- add more scoring options
+
+## Team
+- [Patttrn Labs](https://patttrn.tech)
+- [Musa AbdulKareem](https://x.com/wisemrmusa)
+- Abolare Roheemah
+- Khalid Koiki 
+- Aisha Animashaun
+- Risqat Fijabi
+
+## License
+MIT
 
 Developed by [Patttrn Labs](https://patttrn.tech)
 

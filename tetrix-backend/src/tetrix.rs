@@ -203,7 +203,7 @@ impl Tetris {
         })
     }
 
-    pub fn play(&mut self, moves: &str) {
+    pub fn play(&mut self, moves: &str) -> u32 {
         for (i, c) in moves.chars().enumerate() {
             match c {
                 'I' | 'O' | 'T' | 'Z' | 'L' | 'J' | 'S' => {
@@ -260,6 +260,7 @@ impl Tetris {
             // Update the game state
             self.state = i as u32 + 1;
         }
+        self.score
     }
 
     fn spawn_new_piece(&mut self, shape: char) {
