@@ -1,5 +1,5 @@
 import { GameActions, GameActionTypes, GameState, GameStatus, Movement } from "@/types";
-import { getInitialState, move, rotate, pause, getNextPieceBoard } from "@/utils";
+import { getInitialState, move, rotate } from "@/utils";
 import { useEffect, useReducer, useRef } from "react";
 import { PIECES } from "@/constants";
 
@@ -21,14 +21,6 @@ const identifyPieceType = (piece: { shape: Array<Array<number>>, color: string }
         }
     }
     return 'O'; // Fallback to a valid piece type if no match found
-};
-
-const SHAPE_MAPPING: { [key: string]: string } = {
-    'L': 'L',
-    'I': 'I',
-    'O': 'O',
-    'T': 'T',
-    'Z': 'Z',
 };
 
 interface ExtendedGameState extends GameState {
@@ -130,7 +122,7 @@ export const useTetris = () => {
     };
 
     const keyHandler = (e: KeyboardEvent) => {
-        if (tetrisState.status !== GameStatus.PAUSED) {
+        if (tetrisState.status === GameStatus.PLAYING) {
             switch (e.key) {
                 case 'ArrowDown':
                     movePiece({dx: 0, dy: 1})
@@ -155,7 +147,7 @@ export const useTetris = () => {
         window.addEventListener('keydown', keyHandler);
 
         return () => window.removeEventListener('keydown', keyHandler);
-    }, []);
+    }, [tetrisState.status]);
 
     useEffect(() => {
         let interval: string | number | NodeJS.Timeout | undefined;
