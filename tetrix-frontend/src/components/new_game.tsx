@@ -1,7 +1,6 @@
 'use client'
 import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
-import { stringify } from "querystring";
 
 export default function Game() {
     const { board, status, exportGameRecord, moveRecord } = useTetrisContext()

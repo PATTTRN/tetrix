@@ -4,7 +4,6 @@ import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
 import { Nft } from "./nft";
 import { useState } from "react";
-import {getScore} from "@/utils"
 
 export const SidePanel = () => {
   const { status, score , moveRecord} = useTetrisContext();
