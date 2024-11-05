@@ -6,7 +6,7 @@ import { Nft } from "./nft";
 import { useState } from "react";
 
 export const SidePanel = () => {
-  const { status, score , moveRecord} = useTetrisContext();
+  const { status, score } = useTetrisContext();
   const [showDownloadButton, setShowDownloadButton] = useState(false);
 
   return <div className="w-[200px] flex-shrink-0 flex flex-col gap-[10px]">
@@ -24,20 +24,9 @@ export const SidePanel = () => {
     {/* Game Score */}
     <div className="bg-[#1A1A1A] rounded-[13.183px] border-[0.412px] border-[#3A3A3A] flex-1 overflow-hidden relative">
       <div className="h-full flex flex-col justify-between">
-    <NextPiecePreview />
-        {/* Moves */}
-        <div className="flex flex-col gap-2 px-[14px] max-w-20">
-          {moveRecord && (
-            <p 
-              className="text-[#ffffff] font-medium cursor-pointer whitespace-pre-wrap break-all flex-wrap max-w-20" 
-              onClick={() => {
-                navigator.clipboard.writeText(moveRecord);               
-              }}
-            >
-              {moveRecord}
-            </p>
-          )}
-        </div>
+        {
+          status === GameStatus.PLAYING && <NextPiecePreview />
+        }
         {/* NFT Here */}
         {/* <Nft /> */}
 

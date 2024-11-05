@@ -3,14 +3,14 @@ import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
 
 export default function Game() {
-    const { board, status, exportGameRecord, moveRecord } = useTetrisContext()
+    const { board, status, exportGameRecord } = useTetrisContext()
     const record = exportGameRecord();
 
     // const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
 
     return (
         <main className="flex h-full flex-col items-center justify-center m-2 ">
-            {status === GameStatus.OVER ? <p className="text-white text-center max-w-20 flex-wrap text-wrap" >Game Over {record.score} {moveRecord}</p>: (
+            {status === GameStatus.OVER ? <p className="text-white text-center max-w-20 flex-wrap text-wrap" >Game Over {record.score}</p>: (
                 <div className="w-[400px] h-full flex flex-col border-l border-t border-gray-400">
                     {board.map((row: {filled: boolean, color: string}[], y: number) => {
                         return (
