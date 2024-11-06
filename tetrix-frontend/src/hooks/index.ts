@@ -80,6 +80,7 @@ export const useTetris = () => {
     const [tetrisState, setTetrisState] = useReducer(gameReducer, initialState);
     const gameSpeedRef = useRef(500);
     const gameStartTimeRef = useRef(0);
+    const gameLevel = useRef("easy")
 
     const startGame = () => {
         gameStartTimeRef.current = Date.now();
@@ -154,12 +155,15 @@ export const useTetris = () => {
 
         if (tetrisState.status === GameStatus.PLAYING) {
             // Adjust game speed based on score
-            if (tetrisState.score > 2000) {
+            if (tetrisState.score >= 2000) {
                 gameSpeedRef.current = 200; // Fastest speed
-            } else if (tetrisState.score > 1000) {
+                gameLevel.current = "hard";
+            } else if (tetrisState.score >= 1000) {
                 gameSpeedRef.current = 300; // Medium speed
+                gameLevel.current = "medium";
             } else {
                 gameSpeedRef.current = 500; // Base speed
+                gameLevel.current = "easy";
             }
 
             interval = setInterval(() => movePiece({dx: 0, dy: 1}), gameSpeedRef.current);
@@ -185,6 +189,7 @@ export const useTetris = () => {
         startGame,
         resetGame,
         pauseGame,
-        continueGame
+        continueGame,
+        gameLevel
     }
 }
