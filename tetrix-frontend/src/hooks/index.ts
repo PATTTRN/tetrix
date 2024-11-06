@@ -190,6 +190,8 @@ export const useTetris = () => {
         resetGame,
         pauseGame,
         continueGame,
-        gameLevel
+        gameLevel,
+        movePiece,
+        rotatePiece
     }
 }

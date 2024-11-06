@@ -6,12 +6,12 @@ export default function Game() {
     const { board, status, exportGameRecord, moveRecord } = useTetrisContext()
     const record = exportGameRecord();
 
-    // const savedRecords = JSON.parse(localStorage.getItem('tetrisRecords') || '[]');
-
     return (
         <main className="flex h-full flex-col items-center justify-center">
-            {status === GameStatus.OVER ? <p>Game Over {record.score} {moveRecord}</p>: (
-                <div className="w-[400px] h-full flex flex-col border-l border-t border-gray-400">
+            {status === GameStatus.OVER ? (
+                <p className="text-center">Game Over {record.score}</p>
+            ) : (
+                <div className="w-full max-w-[400px] h-full flex flex-col border-l border-t border-gray-400">
                     {board.map((row: {filled: boolean, color: string}[], y: number) => {
                         return (
                             <div key={y} className="w-full flex-1 flex">

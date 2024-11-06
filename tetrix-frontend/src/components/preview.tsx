@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTetrisContext } from '@/context/TetrisContext';
 
-
 const NextPiecePreview: React.FC = () => {
   const { nextPiece } = useTetrisContext();
   const previewSize = 4;
@@ -17,11 +16,9 @@ const NextPiecePreview: React.FC = () => {
 
   const previewBoard = createEmptyPreviewBoard();
   if (nextPiece?.shape) {
-    // Calculate offsets to center the piece
     const offsetX = Math.floor((previewSize - nextPiece.shape[0].length) / 2);
     const offsetY = Math.floor((previewSize - nextPiece.shape.length) / 2);
 
-    // Draw the piece
     nextPiece.shape.forEach((row: string[], y: number) => {
       row.forEach((value, x) => {
         if (value) {
@@ -40,23 +37,21 @@ const NextPiecePreview: React.FC = () => {
   }
 
   return (
-    <div className="next-piece-preview min-h-[20vh] h-[20vh] p-4">
-      <h3>Next Piece</h3>
+    <div className="next-piece-preview min-h-[10vh] h-[10vh] w-[10vh] p-2 sm:min-h-[20vh] sm:h-[20vh] sm:w-[20vh]">
+      <h3 className="text-xs">Next Piece</h3>
       <div className="w-full h-full flex flex-col border-l border-t border-gray-400">
-            {previewBoard.map((row, y) => (
-                    <div key={y} className="w-full flex-1 flex">
-                        {row.map((cell, x) => (
-                                <div
-                                    key={x}
-                                    className="flex-1 h-full border-r border-b border-gray-400"
-                                    style={{backgroundColor: cell.color}}
-                                />
-                            )
-                        )}
-                    </div>
-                )
-            )}
-        </div>
+        {previewBoard.map((row, y) => (
+          <div key={y} className="w-full flex-1 flex">
+            {row.map((cell, x) => (
+              <div
+                key={x}
+                className="flex-1 h-full border-r border-b border-gray-400"
+                style={{ backgroundColor: cell.color }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
