@@ -155,10 +155,10 @@ export const useTetris = () => {
 
         if (tetrisState.status === GameStatus.PLAYING) {
             // Adjust game speed based on score
-            if (tetrisState.score >= 2000) {
+            if (tetrisState.score >= 20) {
                 gameSpeedRef.current = 200; // Fastest speed
                 gameLevel.current = "hard";
-            } else if (tetrisState.score >= 1000) {
+            } else if (tetrisState.score >= 10) {
                 gameSpeedRef.current = 300; // Medium speed
                 gameLevel.current = "medium";
             } else {

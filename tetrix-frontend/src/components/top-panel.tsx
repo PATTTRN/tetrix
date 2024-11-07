@@ -2,6 +2,7 @@
 import { useTetrisContext } from "@/context/TetrisContext"
 import { GameStatus } from "@/types"
 import { getScore, getHighScore, reseteGame } from "@/utils"
+import NumberFlow from "@number-flow/react"
 
 export const TopPanel = () => {
     const { status, startGame, pauseGame, resetGame, continueGame } = useTetrisContext()
@@ -13,11 +14,11 @@ export const TopPanel = () => {
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-14 text-white">
                 <div className="flex items-center gap-2">
                     <p className="font-medium uppercase text-xs">High Score:</p>
-                    <span className="text-xl sm:text-2xl whitespace-nowrap">{highScore}</span>
+                    <NumberFlow value={highScore} className="text-2xl sm:text-2xl" />
                 </div>
                 <div className="flex items-center gap-1 font-medium text-white">
                     <p className="uppercase text-xs">SCORE:</p>
-                    <p className="text-xl sm:text-2xl">{score}</p>
+                    <NumberFlow value={score} className="text-2xl sm:text-2xl" />
                 </div>
             </div>
             {status === GameStatus.PENDING ? (
