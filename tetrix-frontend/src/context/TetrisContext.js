@@ -1,6 +1,6 @@
-'use client'
-import { createContext, useContext, useState } from 'react'
-import { useTetris } from "@/hooks"
+"use client";
+import { createContext, useContext, useState } from "react";
+import { useTetris } from "@/hooks";
 // import { GameStatus } from "@/types"
 
 // Define the type for the context value
@@ -12,24 +12,54 @@ import { useTetris } from "@/hooks"
 // }
 
 // Create the context with an initial undefined value
-const TetrisContext = createContext()
+const TetrisContext = createContext();
 
 export const TetrisProvider = ({ children }) => {
-    const { board, status, startGame, resetGame, pauseGame, nextPiece, moveRecord, exportGameRecord, continueGame } = useTetris()
-    const [scoree, setScoree] = useState(0);
-    
-    return (
-        <TetrisContext.Provider value={{board, status, startGame, resetGame, pauseGame, scoree, setScoree, nextPiece, moveRecord, exportGameRecord, continueGame}}>
-            {children}
-        </TetrisContext.Provider>
-    )
-}
+  const {
+    board,
+    status,
+    startGame,
+    resetGame,
+    pauseGame,
+    nextPiece,
+    moveRecord,
+    exportGameRecord,
+    continueGame,
+    gameLevel,
+    movePiece,
+    rotatePiece,
+  } = useTetris();
+  const [scoree, setScoree] = useState(0);
+
+  return (
+    <TetrisContext.Provider
+      value={{
+        board,
+        status,
+        startGame,
+        resetGame,
+        pauseGame,
+        scoree,
+        setScoree,
+        nextPiece,
+        moveRecord,
+        exportGameRecord,
+        continueGame,
+        gameLevel,
+        movePiece,
+        rotatePiece,
+      }}
+    >
+      {children}
+    </TetrisContext.Provider>
+  );
+};
 
 // Custom hook to use the tetris context
 export function useTetrisContext() {
-    const context = useContext(TetrisContext)
-    if (context === undefined) {
-        throw new Error('useTetrisContext must be used within a TetrisProvider')
-    }
-    return context
+  const context = useContext(TetrisContext);
+  if (context === undefined) {
+    throw new Error("useTetrisContext must be used within a TetrisProvider");
+  }
+  return context;
 }
