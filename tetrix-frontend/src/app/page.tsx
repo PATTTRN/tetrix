@@ -21,15 +21,11 @@ export default function Home() {
             </div>
             <SidePanel />
           </div>
-<<<<<<< HEAD
-          {/* <Controller /> */}
-=======
           <div className="md:hidden">
           <Controller
           onMove={(dx, dy) => movePiece({ dx, dy })}
           onRotate={rotatePiece} />
           </div>
->>>>>>> 9ee0da73d1db3d466723474eabaf9872578008fe
         </div>
 
       </div>
