@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { TetrisProvider } from "@/context/TetrisContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +30,22 @@ export const metadata: Metadata = {
       },
     ],
   },
+  openGraph: {
+    title: 'tetriX',
+    description: 'tetriX is a classic Tetris game built with Next.js and Tailwind CSS.',
+    url: 'https://tetrix.patttrn.tech',
+    siteName: 'tetriX',
+    images: [
+      { url: '/tetrix-cover.png' }
+    ],
+  }, 
+  twitter: {
+    title: 'tetriX',
+    description: 'tetriX is a classic Tetris game built with Next.js and Tailwind CSS.',
+    images: [
+      { url: '/tetrix-cover.png' }
+    ]
+  }
 };
 
 export default function RootLayout({
@@ -38,11 +55,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+    <TetrisProvider>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
       </body>
+      </TetrisProvider>
     </html>
   );
 }
