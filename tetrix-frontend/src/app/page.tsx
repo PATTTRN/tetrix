@@ -1,5 +1,6 @@
 'use client'
 import { Controller } from "@/components/controller";
+import GameList from "@/components/GameStats";
 import Game from "@/components/new_game";
 import { SidePanel } from "@/components/side-panel";
 import { TopPanel } from "@/components/top-panel";
@@ -8,7 +9,7 @@ import { useTetrisContext } from "@/context/TetrisContext"
 export default function Home() {
   const { movePiece, rotatePiece} = useTetrisContext();
   return (
-      <div className="max-h-screen h-screen overflow-hidden flex flex-col" style={{
+      <div className="max-h-screen h-screen overflow-hidden flex items-center" style={{
         opacity: 1,
         willChange: 'auto'
       }}>
@@ -22,10 +23,13 @@ export default function Home() {
             <SidePanel />
           </div>
           <div className="md:hidden">
-          <Controller
-          onMove={(dx, dy) => movePiece({ dx, dy })}
-          onRotate={rotatePiece} />
+            <Controller
+            onMove={(dx, dy) => movePiece({ dx, dy })}
+            onRotate={rotatePiece} />
           </div>
+        </div>
+        <div className="flex-1">
+          <GameList />
         </div>
 
       </div>
