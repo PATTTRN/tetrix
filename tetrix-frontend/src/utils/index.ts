@@ -7,7 +7,6 @@ let highScore = 0;
 
 // Initialize high score from localStorage
 const initializeHighScore = () => {
-  let highScore = 0;
   if (typeof window !== 'undefined') {
     const storedHighScore = localStorage.getItem('tetrisHighScore');
     if (storedHighScore) {

@@ -2,9 +2,8 @@
 import NextPiecePreview from "./preview";
 import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
-import { ApprenticeNFT, Nft, RookieNFT } from "./nft";
+import { Nft } from "./nft";
 import { useState } from "react";
-import { LevelIndicator } from "./level-indicator";
 
 export const SidePanel = () => {
   const { status, score, gameLevel} = useTetrisContext();
