@@ -16,6 +16,19 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "tetriX",
   description: "tetriX",
+  icons: {
+    icon: [
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+      // Fallback for browsers that don't support SVG favicons
+      {
+        url: "/favicon.png",
+        sizes: "any",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

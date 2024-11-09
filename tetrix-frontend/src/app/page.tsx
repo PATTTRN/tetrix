@@ -22,7 +22,7 @@ export default function Home() {
             </div>
             <SidePanel />
           </div>
-          <Controller />
+          {/* <Controller /> */}
         </div>
 
       </div>

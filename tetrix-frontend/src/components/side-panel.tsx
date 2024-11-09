@@ -25,11 +25,12 @@ export const SidePanel = () => {
     {/* Game Score */}
     <div className="bg-[#1A1A1A] rounded-[13.183px] border-[0.412px] border-[#3A3A3A] flex-1 overflow-hidden relative">
       <div className="h-full flex flex-col justify-between">
+    <NextPiecePreview />
         {/* Moves */}
-        <div className="flex flex-col gap-2 px-[14px]">
+        <div className="flex flex-col gap-2 px-[14px] max-w-20">
           {moveRecord && (
             <p 
-              className="text-[#ffffff] font-medium cursor-pointer whitespace-pre-wrap break-all" 
+              className="text-[#ffffff] font-medium cursor-pointer whitespace-pre-wrap break-all flex-wrap max-w-20" 
               onClick={() => {
                 navigator.clipboard.writeText(moveRecord);               
               }}
@@ -40,7 +41,6 @@ export const SidePanel = () => {
         </div>
         {/* NFT Here */}
         {/* <Nft /> */}
-        <NextPiecePreview />
 
         {/* NFT Image */}
         {status === GameStatus.OVER && <div className="w-full h-full flex flex-col justify-between relative cursor-pointer group"

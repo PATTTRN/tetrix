@@ -2,6 +2,7 @@
 import { useTetrisContext } from "@/context/TetrisContext"
 import { GameStatus } from "@/types"
 import {getScore, getHighScore, reseteGame} from "@/utils"
+import NumberFlow from "@number-flow/react"
 
 export const TopPanel = () => {
     const { status, startGame, pauseGame, resetGame, continueGame } = useTetrisContext()
@@ -12,12 +13,12 @@ export const TopPanel = () => {
         <div className="flex items-center justify-between relative bg-[#1D1D1D] border-[0.412px] border-[#3A3A3A] rounded-[13.183px] px-5 py-3 h-[60px] flex-shrink-0">
             <div className="flex items-center gap-2 text-white">
                 <p className="font-medium uppercase text-xs">High Score:</p>
-                <span className="text-2xl whitespace-nowrap">{highScore}</span>
+                <NumberFlow value={highScore} className="text-2xl"/>
             </div>
             <div className="flex items-center gap-1 font-medium absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-white">
                 <div className="flex items-center gap-2">
                     <p className="uppercase text-xs">SCORE:</p>
-                    <p className="text-2xl">{score}</p>
+                    <NumberFlow value={score} className="text-2xl"/>
                 </div>
                 {/* )} */}
             </div>
