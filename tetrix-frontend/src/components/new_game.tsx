@@ -11,7 +11,7 @@ export default function Game() {
             {status === GameStatus.OVER ? (
                 <p className="text-center">Game Over {record.score}</p>
             ) : (
-                <div className="w-full max-w-[400px] h-full flex flex-col border-l border-t border-gray-400">
+                <div className="w-full max-w-[400px] h-full flex flex-col border-l border-t border-zinc-700">
                     {board.map((row: {filled: boolean, color: string}[], y: number) => {
                         return (
                             <div key={y} className="w-full flex-1 flex">
@@ -19,7 +19,7 @@ export default function Game() {
                                     return (
                                         <div
                                             key={x}
-                                            className="flex-1 h-full border-r border-b border-gray-400"
+                                            className="flex-1 h-full border-r border-b border-zinc-700"
                                             style={{backgroundColor: cell.color}}
                                         />
                                     )

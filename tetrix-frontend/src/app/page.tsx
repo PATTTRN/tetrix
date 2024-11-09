@@ -5,6 +5,8 @@ import { SidePanel } from "@/components/side-panel";
 import { TopPanel } from "@/components/top-panel";
 import { useTetrisContext } from "@/context/TetrisContext"
 
+
+
 export default function Home() {
   const { movePiece, rotatePiece} = useTetrisContext();
   return (

@@ -30,6 +30,22 @@ export const metadata: Metadata = {
       },
     ],
   },
+  openGraph: {
+    title: 'tetriX',
+    description: 'tetriX is a classic Tetris game built with Next.js and Tailwind CSS.',
+    url: 'https://tetrix.patttrn.tech',
+    siteName: 'tetriX',
+    images: [
+      { url: '/tetrix-cover.png' }
+    ],
+  }, 
+  twitter: {
+    title: 'tetriX',
+    description: 'tetriX is a classic Tetris game built with Next.js and Tailwind CSS.',
+    images: [
+      { url: '/tetrix-cover.png' }
+    ]
+  }
 };
 
 export default function RootLayout({
