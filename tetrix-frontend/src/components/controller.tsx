@@ -44,33 +44,31 @@ const DownArrowIcon = () => (
     <path d="M34.5 14.2L20.5 28.2L6.5 14.2H34.5Z" fill="white" />
   </svg>
 );
-
-const Controls = ({ onMove, onRotate }: ControllerProps) => (
-  <div className="flex justify-between w-full gap-4 ">
-
+const Controls = ({ onMove, onRotate, className }: ControllerProps & { className?: string }) => (
+  <div className={`flex justify-between w-full ${className}`}>
     <div className="flex flex-col items-center justify-center flex-shrink-0">
-    <div className="flex flex-col items-center">
-      <ControlButton onClick={onRotate}>
-        <ArrowIcon />
-      </ControlButton>
+      <div className="flex flex-col items-center">
+        <ControlButton onClick={onRotate}>
+          <ArrowIcon />
+        </ControlButton>
+      </div>
+
+      <div className="flex space-x-2 gap-8">
+        <ControlButton onClick={() => onMove(-1, 0)}>
+          <ArrowIcon rotation={-90} />
+        </ControlButton>
+        <ControlButton onClick={() => onMove(1, 0)}>
+          <ArrowIcon rotation={90} />
+        </ControlButton>
+      </div>
+
+      <div className="flex flex-col items-center">
+        <ControlButton onClick={() => onMove(0, 1)}>
+          <DownArrowIcon />
+        </ControlButton>
+      </div>
     </div>
 
-    <div className="flex space-x-2 gap-8">
-      <ControlButton onClick={() => onMove(-1, 0)}>
-        <ArrowIcon rotation={-90} />
-      </ControlButton>
-      <ControlButton onClick={() => onMove(1, 0)}>
-        <ArrowIcon rotation={90} />
-      </ControlButton>
-    </div>
-
-    <div className="flex flex-col items-center">
-      <ControlButton onClick={() => onMove(0, 1)}>
-        <DownArrowIcon />
-      </ControlButton>
-    </div>
-
-  </div>
     <div className="flex flex-col items-center mt-4">
       <button
         onClick={onRotate}
@@ -103,8 +101,8 @@ export const Controller: React.FC<ControllerProps> = ({ onMove, onRotate }) => {
   const [showDownloadButton, setShowDownloadButton] = useState(false);
 
   return (
-    <div className="flex items-center justify-center mt-2 gap-4">
-      <Controls onMove={onMove} onRotate={onRotate} />
+    <div className="flex w-full mt-2 gap-4">
+      <Controls onMove={onMove} onRotate={onRotate} className="w-full" />
       
       <div className="bg-[#1A1A1A] rounded-[13.183px] border-[0.412px] border-[#3A3A3A] inline-block sm:flex-1 overflow-hidden relative">
         <div className="h-full flex flex-col justify-between">
@@ -117,7 +115,6 @@ export const Controller: React.FC<ControllerProps> = ({ onMove, onRotate }) => {
             />
           )}
         </div>
-        <div className="h-full" />
       </div>
     </div>
   );

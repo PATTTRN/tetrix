@@ -8,7 +8,7 @@ export default function Game() {
     const record = exportGameRecord();
 
     return (
-        <div className="flex flex-col items-center justify-center p-4 w-full h-full">
+        <div className="flex flex-col items-center justify-center p-4 w-full h-full gap-12">
             {status === GameStatus.OVER ? (
                 <p className="text-center">Game Over {record.score}</p>
             ) : (
@@ -30,7 +30,7 @@ export default function Game() {
                     })}
                 </div>
             )}
-            <div className="md:hidden">
+            <div className="md:hidden w-full flex justify-center items-center">
                 <Controller
                     onMove={(dx, dy) => movePiece({ dx, dy })}
                     onRotate={rotatePiece} />

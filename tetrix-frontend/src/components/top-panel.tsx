@@ -6,7 +6,7 @@ import NumberFlow from "@number-flow/react"
 
 const ScoreDisplay = ({ label, value }: { label: string; value: number }) => (
   <div className="flex items-center gap-2">
-    <p className="font-medium uppercase text-xs">{label}:</p>
+    <p className="font-medium uppercase text-xs ">{label}:</p>
     <NumberFlow value={value} className="text-2xl sm:text-2xl" />
   </div>
 )
@@ -47,8 +47,8 @@ export const TopPanel = () => {
     }
 
     return (
-        <div className="w-full flex flex-row items-center justify-between relative bg-[#1D1D1D] border-[0.412px] border-[#3A3A3A] rounded-[13.183px] px-4 py-3 h-auto sm:h-[60px]">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-14 text-white">
+        <div className="w-full flex flex-row items-center justify-between relative bg-[#1D1D1D] border-[0.412px] border-[#3A3A3A] rounded-[13.183px] px-4 py-3 h-auto">
+            <div className="flex flex-col text-white">
                 <ScoreDisplay label="High Score" value={highScore} />
                 <ScoreDisplay label="Score" value={score} />
             </div>
