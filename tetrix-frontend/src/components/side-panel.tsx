@@ -59,14 +59,14 @@ export const SidePanel = () => {
               )}
           </div>)}
 
-          <div className="hidden sm:block pb-3 px-[14px] flex items-center justify-between uppercase">
+          <div className="hidden pb-3 px-[14px] sm:flex items-center justify-between uppercase">
             <div className="text-[#ffffff] font-medium">
               <p className="text-[8px]">POINTS:</p>
               <p className="text-base">{score}</p>
             </div>
             <div className="text-[#ffffff] font-medium text-right space-y-1">
-              <p className="text-[8px]">level:easy</p>
-              <p className="text-[8px]">14 Sep,3:54pm</p>
+              <p className="text-[8px]">level: {gameLevel.current === 'hard' ? 'Difficult' : gameLevel.current === 'medium' ? 'Medium' : 'Easy'}</p>
+              <p className="text-[8px]">{new Date().toLocaleDateString()}</p>
             </div>
           </div>
         </div>
