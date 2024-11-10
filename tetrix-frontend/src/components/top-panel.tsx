@@ -1,7 +1,7 @@
 'use client'
 import { useTetrisContext } from "@/context/TetrisContext"
 import { GameStatus } from "@/types"
-import { getScore, getHighScore, reseteGame } from "@/utils"
+import { getScore, getHighScore } from "@/utils"
 import NumberFlow from "@number-flow/react"
 
 const ScoreDisplay = ({ label, value }: { label: string; value: number }) => (

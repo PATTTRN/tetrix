@@ -3,7 +3,7 @@ import { GameStatus } from "@/types";
 import { useTetrisContext } from "@/context/TetrisContext";
 import { Nft } from "./nft";
 import { useState } from "react";
-import { GameButton, renderGameButton } from "./top-panel";
+import { renderGameButton } from "./top-panel";
 
 interface ControllerProps {
   onMove: (dx: number, dy: number) => void;

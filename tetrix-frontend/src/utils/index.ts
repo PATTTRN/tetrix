@@ -1,21 +1,56 @@
 import { BOARD_COLOR, BOARD_H, BOARD_W, PIECES } from "@/constants";
 import { Board, GameState, GameStatus, Movement } from "@/types";
 
+// Use a class to encapsulate game state and avoid global variables
+class GameStateManager {
+  private static instance: GameStateManager;
+  private score: number = 0;
+  private highScore: number = 0;
 
-let globalScore = 0;
-let highScore = 0;
+  private constructor() {
+    this.initializeHighScore();
+  }
 
-// Initialize high score from localStorage
-const initializeHighScore = () => {
-  if (typeof window !== 'undefined') {
-    const storedHighScore = localStorage.getItem('tetrisHighScore');
-    if (storedHighScore) {
-      highScore = parseInt(storedHighScore, 10);
+  public static getInstance(): GameStateManager {
+    if (!GameStateManager.instance) {
+      GameStateManager.instance = new GameStateManager();
+    }
+    return GameStateManager.instance;
+  }
+
+  private initializeHighScore(): void {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('tetrisHighScore');
+      if (stored) {
+        this.highScore = parseInt(stored, 10);
+      }
     }
   }
-};
 
-initializeHighScore();
+  public getScore(): number {
+    return this.score;
+  }
+
+  public getHighScore(): number {
+    return this.highScore;
+  }
+
+  public updateScore(newScore: number): void {
+    this.score = newScore;
+    if (newScore > this.highScore) {
+      this.highScore = newScore;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('tetrisHighScore', newScore.toString());
+      }
+    }
+  }
+
+  public resetScore(): void {
+    this.score = 0;
+  }
+}
+
+const gameState = GameStateManager.getInstance();
 
 const createBoard = (h = BOARD_H, w = BOARD_W): Board => {
   return Array.from(Array(h), () =>
@@ -32,7 +67,6 @@ const getRandomPiece = () => {
   const key = keys[
     Math.floor(Math.random() * keys.length)
   ] as keyof typeof PIECES;
-
   return PIECES[key];
 };
 
@@ -52,10 +86,8 @@ const draw = (state: GameState) => {
 
   for (let y = 0; y < piece.shape.length; y++) {
     const row = piece.shape[y];
-
     for (let x = 0; x < row.length; x++) {
       const value = row[x];
-
       if (value) {
         board[y + position.y][x + position.x] = {
           filled: true,
@@ -65,7 +97,6 @@ const draw = (state: GameState) => {
       }
     }
   }
-
   return board;
 };
 
@@ -74,10 +105,8 @@ const clear = (state: GameState) => {
 
   for (let y = 0; y < piece.shape.length; y++) {
     const row = piece.shape[y];
-
     for (let x = 0; x < row.length; x++) {
       const value = row[x];
-
       if (value) {
         board[y + position.y][x + position.x] = {
           filled: false,
@@ -87,7 +116,6 @@ const clear = (state: GameState) => {
       }
     }
   }
-
   return board;
 };
 
@@ -96,7 +124,6 @@ const checkCollision = (state: GameState) => {
 
   for (let y = 0; y < piece.shape.length; y++) {
     const row = piece.shape[y];
-
     for (let x = 0; x < row.length; x++) {
       const value = row[x];
       const targetPosition = board[y + position.y]?.[x + position.x];
@@ -107,40 +134,21 @@ const checkCollision = (state: GameState) => {
       }
     }
   }
-
   return false;
 };
 
 export const getScore = (): number => {
-  return globalScore;
+  return gameState.getScore();
 };
 
 export const getHighScore = (): number => {
-  return highScore;
-};
-
-const updateHighScore = (newScore: number) => {
-  if (newScore > highScore) {
-    highScore = newScore;
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('tetrisHighScore', highScore.toString());
-    }
-  }
+  return gameState.getHighScore();
 };
 
 export const reseteGame = (): GameState => {
-  // Update high score before resetting
-  updateHighScore(globalScore);
-  
-  // Reset global score to 0
-  globalScore = 0;
-  
-  // Create a new initial game state
+  gameState.resetScore();
   const newState = getInitialState();
-  
-  // Ensure the score in the new state is 0
   newState.score = 0;
-  
   return newState;
 };
 
@@ -151,94 +159,72 @@ export const move = (
 ): GameState => {
   const { position, board, score, nextPiece } = state;
 
-  let newPosition;
-
-  if (state.status === GameStatus.PAUSED) {
-    newPosition = {
-        x: position.x,
-        y: position.y,
-      };
-}
-
-  newPosition = {
-    x: position.x + movement.dx,
-    y: position.y + movement.dy,
-  };
+  const newPosition = state.status === GameStatus.PAUSED ? 
+    { x: position.x, y: position.y } :
+    { x: position.x + movement.dx, y: position.y + movement.dy };
 
   if (checkCollision({ ...state, position: newPosition })) {
     if (isAdd) {
-      // Update high score when the game ends
-      updateHighScore(globalScore);
+      gameState.updateScore(score);
       return { ...state, status: GameStatus.OVER };
     }
     if (movement.dy) {
-      const fixedBoard = board.map((row) =>
-        row.map((cell) => ({
+      const fixedBoard = board.map(row =>
+        row.map(cell => ({
           ...cell,
           filled: false,
           fixed: cell.fixed || cell.filled,
         }))
       );
 
-      const completedRows = fixedBoard.filter(
-        row => row.every(cell => cell.fixed)
-    ).length;
+      const completedRows = fixedBoard.filter(row => 
+        row.every(cell => cell.fixed)
+      ).length;
 
-    // Calculate new score
-    // globalScore = score + (completedRows * 10);
-    globalScore = score + (completedRows * 10);
-    const newScore = globalScore;
-    // Update high score
-    updateHighScore(newScore);
+      const newScore = score + (completedRows * 10);
+      gameState.updateScore(newScore);
 
-    const nonFixedRows = fixedBoard.filter(
-    (row) => !row.every((cell) => cell.fixed)
-    );
+      const nonFixedRows = fixedBoard.filter(
+        row => !row.every(cell => cell.fixed)
+      );
 
-    const rowsToCreate = BOARD_H - nonFixedRows.length;
+      const rowsToCreate = BOARD_H - nonFixedRows.length;
+      const newRows = rowsToCreate ? createBoard(rowsToCreate) : [];
+      const newBoard = [...newRows, ...nonFixedRows];
 
-    const newRows = rowsToCreate ? createBoard(rowsToCreate) : [];
-
-    const newBoard = [...newRows, ...nonFixedRows];
-
-    return move(
-    {
-        ...state,
-        piece: nextPiece, // Use the next piece as the current piece
-        nextPiece: getRandomPiece(), // Get a new next piece
-        board: newBoard,
-        position: { x: 4, y: 0 },
-        score: newScore
-    },
-    { dx: 0, dy: 0 },
-    true
-    );
+      return move(
+        {
+          ...state,
+          piece: nextPiece,
+          nextPiece: getRandomPiece(),
+          board: newBoard,
+          position: { x: 4, y: 0 },
+          score: newScore
+        },
+        { dx: 0, dy: 0 },
+        true
+      );
     }
     return state;
   }
 
-  const cBoard = clear(state);
-
-  const dBoard = draw({ ...state, position: newPosition, board: cBoard });
+  const clearedBoard = clear(state);
+  const drawnBoard = draw({ ...state, position: newPosition, board: clearedBoard });
 
   return {
     ...state,
     position: newPosition,
-    board: dBoard,
+    board: drawnBoard,
   };
 };
 
-// Add function to get a preview board for the next piece
 export const getNextPieceBoard = (piece: { shape: typeof PIECES[keyof typeof PIECES]['shape']; color: string; }): Board => {
-  // Create a small board just big enough for the piece (usually 4x4)
   const previewBoard = createBoard(4, 4);
   
-  // Draw the piece in the center of the preview board
   for (let y = 0; y < piece.shape.length; y++) {
     const row = piece.shape[y];
     for (let x = 0; x < row.length; x++) {
-      const value = row[x];
-      if (value) {
+      if (row[x]) {
         previewBoard[y][x] = {
           filled: true,
           fixed: false,
@@ -253,35 +239,28 @@ export const getNextPieceBoard = (piece: { shape: typeof PIECES[keyof typeof PIE
 
 export const rotate = (state: GameState) => {
   const { piece } = state;
-
-  const transposed = piece.shape[0].map((_, colidx) =>
-    piece.shape.map((row) => row[colidx])
+  const transposed = piece.shape[0].map((_, colIdx) =>
+    piece.shape.map(row => row[colIdx])
   );
-
-  const rotated = transposed.map((row) => row.reverse());
-
-  const newPiece = {
-    ...piece,
-    shape: rotated,
-  };
+  const rotated = transposed.map(row => row.reverse());
+  const newPiece = { ...piece, shape: rotated };
 
   if (checkCollision({ ...state, piece: newPiece })) {
     return state;
   }
 
-  const cBoard = clear(state);
-
-  const dBoard = draw({ ...state, piece: newPiece, board: cBoard });
+  const clearedBoard = clear(state);
+  const drawnBoard = draw({ ...state, piece: newPiece, board: clearedBoard });
 
   return {
     ...state,
     piece: newPiece,
-    board: dBoard,
+    board: drawnBoard,
   };
 };
 
 export const pause = (state: GameState) => {
-    if (state.status === GameStatus.PAUSED) {
-        return; // Don't process keyboard inputs while paused
-    }
-}
+  if (state.status === GameStatus.PAUSED) {
+    return;
+  }
+};
