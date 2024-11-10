@@ -1,6 +1,6 @@
 import { GameActions, GameActionTypes, GameState, GameStatus, Movement } from "@/types";
 import { getInitialState, move, rotate } from "@/utils";
-import { useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useReducer, useRef } from "react";
 import { PIECES } from "@/constants";
 
 // Add mapping for moves and shapes
@@ -89,30 +89,30 @@ export const useTetris = () => {
         })
     }
 
-    const continueGame = () => setTetrisState({
+    const continueGame = useCallback(() => setTetrisState({
         type: GameActionTypes.CONTINUE
-    });
-    const pauseGame = () => setTetrisState({
+    }), [])
+    const pauseGame = useCallback(() => setTetrisState({
         type: GameActionTypes.PAUSE
-    })
-    const resetGame = () => setTetrisState({
+    }), [])
+    const resetGame = useCallback(() => setTetrisState({
         type: GameActionTypes.RESET
-    })
-    const rotatePiece = () => setTetrisState({
+    }), [])
+    const rotatePiece = useCallback(() => setTetrisState({
         type: GameActionTypes.ROTATE
-    })
-    const movePiece = (m: Movement) => setTetrisState({
+    }), [])
+    const movePiece = useCallback((m: Movement) => setTetrisState({
         type :GameActionTypes.MOVE,
         payload: m
-    })
+    }), [])
 
     // Export game record
-    const exportGameRecord = () => {
+    const exportGameRecord = useCallback(() => {
         return tetrisState.moveRecord;
-    };
+    }, [tetrisState.moveRecord])
 
      // Save game record to localStorage
-    const saveGameRecord = () => {
+    const saveGameRecord = useCallback(() => {
         const records = [];
         records.push({
             timestamp: Date.now(),
@@ -120,9 +120,9 @@ export const useTetris = () => {
             score: tetrisState.score
         });
         localStorage.setItem('tetrisRecords', JSON.stringify(records));
-    };
+    }, [tetrisState.moveRecord, tetrisState.score]);
 
-    const keyHandler = (e: KeyboardEvent) => {
+    const keyHandler = useCallback((e: KeyboardEvent) => {
         if (tetrisState.status === GameStatus.PLAYING) {
             switch (e.key) {
                 case 'ArrowDown':
@@ -142,13 +142,13 @@ export const useTetris = () => {
                     break;
             }
         }
-    }
+    }, [tetrisState.status, movePiece, rotatePiece]);
 
     useEffect(() => {
         window.addEventListener('keydown', keyHandler);
 
         return () => window.removeEventListener('keydown', keyHandler);
-    }, [tetrisState.status]);
+    }, [tetrisState.status, keyHandler]);
 
     useEffect(() => {
         let interval: string | number | NodeJS.Timeout | undefined;
@@ -170,14 +170,14 @@ export const useTetris = () => {
         }
 
         return () => clearInterval(interval)
-    }, [tetrisState.status, tetrisState.score])
+    }, [tetrisState.status, tetrisState.score, movePiece])
 
      // Save record when game is over
      useEffect(() => {
         if (tetrisState.status === GameStatus.OVER) {
             saveGameRecord();
         }
-    }, [tetrisState.status]);
+    }, [tetrisState.status, saveGameRecord]);
 
     return {
         board: tetrisState.board,

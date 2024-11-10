@@ -15,6 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://tetrix.patttrn.tech'),
   title: "tetriX",
   description: "tetriX",
   icons: {
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     url: 'https://tetrix.patttrn.tech',
     siteName: 'tetriX',
     images: [
-      { url: '/tetrix-cover.png' }
+      { url: '/tetrix-covver.png' }
     ],
   }, 
   twitter: {
