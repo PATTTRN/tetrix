@@ -39,13 +39,13 @@ const NextPiecePreview: React.FC = () => {
   return (
     <div className="next-piece-preview min-h-[10vh] h-[10vh] w-[10vh] p-2 sm:min-h-[20vh] sm:h-[20vh] sm:w-[20vh]">
       <h3 className="text-xs">Next Piece</h3>
-      <div className="w-full h-full flex flex-col border-l border-t border-gray-400">
+      <div className="w-full h-full flex flex-col border-l border-t border-zinc-800">
         {previewBoard.map((row, y) => (
           <div key={y} className="w-full flex-1 flex">
             {row.map((cell, x) => (
               <div
                 key={x}
-                className="flex-1 h-full border-r border-b border-gray-400"
+                className="flex-1 h-full border-r border-b border-zinc-800"
                 style={{ backgroundColor: cell.color }}
               />
             ))}

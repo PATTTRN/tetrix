@@ -1,17 +1,18 @@
 'use client'
 import { GameStatus } from "@/types"
 import { useTetrisContext } from "@/context/TetrisContext"
+import { Controller } from "./controller";
 
 export default function Game() {
-    const { board, status, exportGameRecord } = useTetrisContext()
+    const { board, status, exportGameRecord, movePiece, rotatePiece } = useTetrisContext()
     const record = exportGameRecord();
 
     return (
-        <main className="flex h-full flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-4 w-full h-full gap-12">
             {status === GameStatus.OVER ? (
                 <p className="text-center">Game Over {record.score}</p>
             ) : (
-                <div className="w-full max-w-[400px] h-full flex flex-col border-l border-t border-zinc-700">
+                <div className="w-[200px] h-[400px] md:w-[400px] md:h-[800px] flex flex-col border-l border-t border-zinc-800">
                     {board.map((row: {filled: boolean, color: string}[], y: number) => {
                         return (
                             <div key={y} className="w-full flex-1 flex">
@@ -19,7 +20,7 @@ export default function Game() {
                                     return (
                                         <div
                                             key={x}
-                                            className="flex-1 h-full border-r border-b border-zinc-700"
+                                            className="flex-1 h-full border-r border-b border-zinc-800"
                                             style={{backgroundColor: cell.color}}
                                         />
                                     )
@@ -29,6 +30,12 @@ export default function Game() {
                     })}
                 </div>
             )}
-        </main>
+            <div className="md:hidden w-full flex justify-center items-center">
+                <Controller
+                    onMove={(dx, dy) => movePiece({ dx, dy })}
+                    onRotate={rotatePiece} />
+            </div>
+
+        </div>
     )
 }
