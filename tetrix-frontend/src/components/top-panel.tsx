@@ -11,7 +11,7 @@ const ScoreDisplay = ({ label, value }: { label: string; value: number }) => (
   </div>
 )
 
-const GameButton = ({ onClick, children }: { onClick: () => void; children: React.ReactNode }) => (
+export const GameButton = ({ onClick, children }: { onClick: () => void; children: React.ReactNode }) => (
   <button 
     onClick={onClick}
     className="text-white border border-gray rounded-md py-1 px-2 sm:px-4 mt-2 sm:mt-0 text-xs sm:text-base"
@@ -20,12 +20,7 @@ const GameButton = ({ onClick, children }: { onClick: () => void; children: Reac
   </button>
 )
 
-export const TopPanel = () => {
-    const { status, startGame, pauseGame, resetGame, continueGame } = useTetrisContext()
-    const score = getScore()
-    const highScore = getHighScore()
-
-    const renderGameButton = () => {
+export const renderGameButton = (status: GameStatus, startGame: () => void, pauseGame: () => void, continueGame: () => void, resetGame: () => void, reseteGame: () => void) => {
         switch (status) {
             case GameStatus.PENDING:
                 return <GameButton onClick={startGame}>START GAME</GameButton>
@@ -45,6 +40,11 @@ export const TopPanel = () => {
                 return null
         }
     }
+export const TopPanel = () => {
+    const { status, startGame, pauseGame, resetGame, continueGame, reseteGame } = useTetrisContext()
+    const score = getScore()
+    const highScore = getHighScore()
+
 
     return (
         <div className="w-full flex flex-row items-center justify-between relative bg-[#1D1D1D] border-[0.412px] border-[#3A3A3A] rounded-[13.183px] px-4 py-3 h-auto">
@@ -52,7 +52,9 @@ export const TopPanel = () => {
                 <ScoreDisplay label="High Score" value={highScore} />
                 <ScoreDisplay label="Score" value={score} />
             </div>
-            {renderGameButton()}
+            <div className="md:flex items-center gap-2 hidden">
+                {renderGameButton(status, startGame, pauseGame, continueGame, resetGame, reseteGame)}
+            </div>
         </div>
     )
 }

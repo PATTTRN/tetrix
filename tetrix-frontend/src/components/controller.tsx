@@ -3,6 +3,7 @@ import { GameStatus } from "@/types";
 import { useTetrisContext } from "@/context/TetrisContext";
 import { Nft } from "./nft";
 import { useState } from "react";
+import { GameButton, renderGameButton } from "./top-panel";
 
 interface ControllerProps {
   onMove: (dx: number, dy: number) => void;
@@ -97,25 +98,26 @@ const GameOverNft = ({ showDownloadButton, setShowDownloadButton }: { showDownlo
 );
 
 export const Controller: React.FC<ControllerProps> = ({ onMove, onRotate }) => {
-  const { status } = useTetrisContext();
+  const { status , startGame, pauseGame, continueGame, resetGame, reseteGame } = useTetrisContext();
   const [showDownloadButton, setShowDownloadButton] = useState(false);
 
   return (
-    <div className="flex w-full mt-2 gap-4">
+    <div className="flex flex-col md:flex-row  w-full mt-2 gap-4">
       <Controls onMove={onMove} onRotate={onRotate} className="w-full" />
-      
-      <div className="bg-[#1A1A1A] rounded-[13.183px] border-[0.412px] border-[#3A3A3A] inline-block sm:flex-1 overflow-hidden relative">
-        <div className="h-full flex flex-col justify-between">
-          {status !== GameStatus.OVER ? (
-            <div className="md:hidden" />
-          ) : (
-            <GameOverNft 
-              showDownloadButton={showDownloadButton}
-              setShowDownloadButton={setShowDownloadButton}
-            />
-          )}
-        </div>
+
+      <div className="items-center gap-2 flex md:hidden justify-center space-y-10">
+        { renderGameButton(status, startGame, pauseGame, continueGame, resetGame, reseteGame) }  
       </div>
+      {status === GameStatus.OVER ? (
+        <div className="bg-[#1A1A1A] rounded-[13.183px] border-[0.412px] border-[#3A3A3A] inline-block sm:flex-1 overflow-hidden">
+          <GameOverNft 
+            showDownloadButton={showDownloadButton}
+            setShowDownloadButton={setShowDownloadButton}
+          />
+        </div>
+      ) : (
+        <div className="md:hidden" />
+      )}
     </div>
   );
 };
