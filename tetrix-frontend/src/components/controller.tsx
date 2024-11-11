@@ -12,7 +12,7 @@ interface ControllerProps {
 
 const ControlButton = ({ onClick, children, className = "" }: { onClick: () => void, children: React.ReactNode, className?: string }) => (
   <button
-    className={`w-[30px] h-[26px] flex items-center justify-center rounded-[5px] text-sm font-medium border-[1.253px] border-[#424242] text-white italic hover:opacity-80 active:translate-y-0.5 ${className}`}
+    className={`w-[40px] h-[30px] flex items-center justify-center rounded-[5px] text-sm font-medium border-[1.253px] border-[#424242] text-white italic hover:opacity-80 active:translate-y-0.5 ${className}`}
     onClick={onClick}
     style={{
       background: "linear-gradient(rgb(66, 66, 66) 0%, rgb(85, 85, 85) 100%)",
@@ -46,7 +46,7 @@ const DownArrowIcon = () => (
   </svg>
 );
 const Controls = ({ onMove, onRotate, className }: ControllerProps & { className?: string }) => (
-  <div className={`flex justify-between w-full ${className}`}>
+  <div className={`flex justify-between w-full px-6 ${className}`}>
     <div className="flex flex-col items-center justify-center flex-shrink-0">
       <div className="flex flex-col items-center">
         <ControlButton onClick={onRotate}>
@@ -73,7 +73,7 @@ const Controls = ({ onMove, onRotate, className }: ControllerProps & { className
     <div className="flex flex-col items-center mt-4">
       <button
         onClick={onRotate}
-        className="w-12 h-12 rounded-full bg-[#1A1A1A] hover:bg-[#242424] active:bg-[#2E2E2E] border border-[#3A3A3A] transition-all duration-150 flex items-center justify-center"
+        className="w-16 h-16 rounded-full bg-[#1A1A1A] hover:bg-[#242424] active:bg-[#2E2E2E] border border-[#3A3A3A] transition-all duration-150 flex items-center justify-center"
       >
       </button>
     </div>
