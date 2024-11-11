@@ -8,11 +8,11 @@ export default function Game() {
     const record = exportGameRecord();
 
     return (
-        <div className="flex flex-col items-center justify-center p-4 w-full h-full gap-12">
+        <div className="flex flex-col items-center justify-center p-4 w-[80vw] h-[80vh] gap-12">
             {status === GameStatus.OVER ? (
                 <p className="text-center">Game Over {record.score}</p>
             ) : (
-                <div className="w-[200px] h-[400px] md:w-[400px] md:h-[800px] flex flex-col border-l border-t border-zinc-800">
+                <div className="h-[80vh] aspect-[4/8] flex flex-col border-l border-t border-zinc-800">
                     {board.map((row: {filled: boolean, color: string}[], y: number) => {
                         return (
                             <div key={y} className="w-full flex-1 flex">
