@@ -1,4 +1,6 @@
 'use client'
+import { Controller } from "@/components/controller";
+import GameList from "@/components/GameStats";
 import Game from "@/components/new_game";
 import { SidePanel } from "@/components/side-panel";
 import { TopPanel } from "@/components/top-panel";
@@ -7,7 +9,7 @@ import { TopPanel } from "@/components/top-panel";
 
 export default function Home() {
   return (
-      <div className="max-h-screen max-w-screen overflow-hidden flex flex-col w-full h-full" style={{
+      <div className="max-h-screen h-screen overflow-hidden flex items-center" style={{
         opacity: 1,
         willChange: 'auto'
       }}>
@@ -19,7 +21,10 @@ export default function Home() {
               <Game />
             </div>
             <SidePanel />
-          </div> 
+            </div>
+        </div>
+        <div className="flex-1">
+          <GameList />
         </div>
 
       </div>
