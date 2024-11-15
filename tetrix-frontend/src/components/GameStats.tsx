@@ -27,7 +27,7 @@ const GameList = () => {
     },
   ];
 
-  const [selectedGame, setSelectedGame] = useState(null || 0);
+  const [selectedGame, setSelectedGame] = useState<number | null>(null);
 
   const handleVerify = (gameId: number) => {
     // Add your verification logic here
@@ -86,7 +86,7 @@ const GameList = () => {
               <div className="p-4 border-b border-gray-200 flex justify-between items-center">
                 <h2 className="text-xl font-bold text-gray-800">Game Details</h2>
                 <button
-                  onClick={() => setSelectedGame(null || 0)}
+                  onClick={() => setSelectedGame(null)}
                   className="text-gray-500 hover:text-gray-700"
                 >
                   ✕

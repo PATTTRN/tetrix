@@ -6,7 +6,7 @@ import { Nft } from "./nft";
 import { useState } from "react";
 
 export const SidePanel = () => {
-  const { status, score, gameLevel, moveRecord} = useTetrisContext();
+  const { status, score, gameLevel } = useTetrisContext();
   const [showDownloadButton, setShowDownloadButton] = useState(false);
 
   return (

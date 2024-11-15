@@ -1,5 +1,4 @@
 'use client'
-import { Controller } from "@/components/controller";
 import GameList from "@/components/GameStats";
 import Game from "@/components/new_game";
 import { SidePanel } from "@/components/side-panel";

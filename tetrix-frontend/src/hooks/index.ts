@@ -1,4 +1,4 @@
-import { GameActions, GameActionTypes, GameState, GameStatus, Movement, Position, Piece, TetrisPiece } from "@/types";
+import { GameActions, GameActionTypes, GameState, GameStatus, Movement, Position } from "@/types";
 import { getInitialState, move, rotate, checkCollision } from "@/utils";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { PIECES } from "@/constants";
@@ -23,9 +23,10 @@ const identifyPieceType = (piece: { shape: Array<Array<number>>, color: string }
 };
 
 // Type guard for Position
-const isPosition = (value: any): value is Position => {
-    return value && 
+const isPosition = (value: unknown): value is Position => {
+    return Boolean(value) && 
            typeof value === 'object' && 
+           value !== null &&
            'x' in value && 
            'y' in value && 
            typeof value.x === 'number' && 
