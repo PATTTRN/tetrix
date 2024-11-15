@@ -1,5 +1,5 @@
-import { GameActions, GameActionTypes, GameState, GameStatus, Movement } from "@/types";
-import { getInitialState, move, rotate } from "@/utils";
+import { GameActions, GameActionTypes, GameState, GameStatus, Movement, Position } from "@/types";
+import { getInitialState, move, rotate, checkCollision } from "@/utils";
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import { PIECES } from "@/constants";
 
@@ -13,7 +13,6 @@ const MOVE_MAPPING = {
 
 // Helper function to identify piece shape
 const identifyPieceType = (piece: { shape: Array<Array<number>>, color: string }): string => {
-    // Compare the current piece with each piece in PIECES constant
     for (const [key, refPiece] of Object.entries(PIECES)) {
         if (JSON.stringify(piece.shape) === JSON.stringify(refPiece.shape) && 
             piece.color === refPiece.color) {
@@ -21,6 +20,32 @@ const identifyPieceType = (piece: { shape: Array<Array<number>>, color: string }
         }
     }
     return 'O'; // Fallback to a valid piece type if no match found
+};
+
+// Type guard for Position
+const isPosition = (value: unknown): value is Position => {
+    return Boolean(value) && 
+           typeof value === 'object' && 
+           value !== null &&
+           'x' in value && 
+           'y' in value && 
+           typeof value.x === 'number' && 
+           typeof value.y === 'number';
+};
+
+// Helper function to check if a move would be valid
+const wouldMoveBeValid = (state: GameState, movement: Movement): boolean => {
+    if (!isPosition(state.position)) {
+        return false;
+    }
+
+    const newPosition = {
+        x: state.position.x + movement.dx,
+        y: state.position.y + movement.dy,
+    };
+
+    // Check if the move would cause a collision
+    return !checkCollision({ ...state, position: newPosition });
 };
 
 interface ExtendedGameState extends GameState {
@@ -38,41 +63,63 @@ const gameReducer = (state: GameState, action: GameActions) => {
             const startState = move(state, {dx: 0, dy: 0});
             const initialPieceType = identifyPieceType(state.piece);
             return { ...startState, status: GameStatus.PLAYING, moveRecord: initialPieceType };
+            
         case GameActionTypes.PAUSE:
             const pauseState = move(state, {dx: 0, dy: 0});
             return { ...pauseState, status: GameStatus.PAUSED, moveRecord: state.moveRecord };
+            
         case GameActionTypes.CONTINUE:
             const continueState = move(state, {dx: 0, dy: 0});
             return { ...continueState, status: GameStatus.PLAYING, moveRecord: state.moveRecord };
+            
         case GameActionTypes.RESET:
             const resetState = move(getInitialState(), {dx: 0, dy: 0}) as ExtendedGameState;
-            // const initialPieceType = identifyPieceType(resetState.piece);
             return { ...resetState, status: GameStatus.PLAYING, moveRecord: identifyPieceType(resetState.piece) };
+            
         case GameActionTypes.ROTATE:
+            const beforeRotateState = { ...state };
             const rotatedState = rotate(state);
-            return {
-                ...rotatedState,
-                moveRecord: state.moveRecord + MOVE_MAPPING.up
-            };
+            
+            // Check if rotation was successful by comparing states
+            const wasRotationSuccessful = JSON.stringify(beforeRotateState.piece.shape) !== 
+                                        JSON.stringify(rotatedState.piece.shape);
+            
+            if (wasRotationSuccessful) {
+                return {
+                    ...rotatedState,
+                    moveRecord: state.moveRecord + MOVE_MAPPING.up
+                };
+            }
+            return { ...rotatedState, moveRecord: state.moveRecord };
+            
         case GameActionTypes.MOVE:
             const { dx, dy } = action.payload;
-            let moveCode = '';
-            if (dx === 1) moveCode = MOVE_MAPPING.right;
-            else if (dx === -1) moveCode = MOVE_MAPPING.left;
-            else if (dy === 1) moveCode = MOVE_MAPPING.down;
-
-            const movedState = move(state, action.payload);
-
-            // If piece has landed and new piece appeared, record the new piece
-            const hasNewPiece = movedState.piece !== state.piece;
-            const newPieceRecord = hasNewPiece ? identifyPieceType(movedState.piece) : '';
             
-            return {
-                ...movedState,
-                moveRecord: state.moveRecord + moveCode + newPieceRecord
-            };
+            // First check if the move would be valid
+            if (wouldMoveBeValid(state, action.payload)) {
+                const movedState = move(state, action.payload);
+                let moveCode = '';
+                
+                if (dx === 1) moveCode = MOVE_MAPPING.right;
+                else if (dx === -1) moveCode = MOVE_MAPPING.left;
+                else if (dy === 1) moveCode = MOVE_MAPPING.down;
+
+                // If piece has landed and new piece appeared
+                const hasNewPiece = movedState.piece !== state.piece;
+                const newPieceRecord = hasNewPiece ? identifyPieceType(movedState.piece) : '';
+                
+                return {
+                    ...movedState,
+                    moveRecord: state.moveRecord + moveCode + newPieceRecord
+                };
+            }
+            
+            // If move would be invalid, just return current state with move
+            const movedState = move(state, action.payload);
+            return { ...movedState, moveRecord: state.moveRecord };
+            
         default:
-            return state; //O444444I444434344414144444444L4343444444444
+            return state;
     }
 }
 

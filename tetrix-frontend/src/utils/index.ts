@@ -119,7 +119,7 @@ const clear = (state: GameState) => {
   return board;
 };
 
-const checkCollision = (state: GameState) => {
+export const checkCollision = (state: GameState) => {
   const { piece, board, position } = state;
 
   for (let y = 0; y < piece.shape.length; y++) {
