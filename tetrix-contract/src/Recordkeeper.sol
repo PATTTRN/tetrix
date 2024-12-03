@@ -2,14 +2,11 @@
 pragma solidity ^0.8.12;
 
 contract RecordKeeper {
-    uint256 playerCount;
+    uint256 public playerCount; // Make playerCount public to allow external access
     event PlayerRecordUpdated(address indexed playerAddress, uint256 score, uint256 gameDuration, string level, uint256 linesCleared, string moves);
     event PlayerVerificationStatusUpdated(address indexed playerAddress, bool verified);
     event LeaderboardUpdated(address indexed playerAddress, uint256 score);
 
-    constructor() {
-        
-    }
     struct Player {
         uint256 playerId;
         address playerAddress;
@@ -30,6 +27,11 @@ contract RecordKeeper {
         if (targetPlayer.playerAddress == address(0)) {
             targetPlayer.playerId = playerCount++;
             targetPlayer.playerAddress = msg.sender;
+            targetPlayer.score = _score; // Initialize score for new player
+            targetPlayer.gameDuration = _gameDuration; // Initialize game duration for new player
+            targetPlayer.level = _level; // Initialize level for new player
+            targetPlayer.linesCleared = _linesCleared; // Initialize lines cleared for new player
+            targetPlayer.moves = _moves; // Initialize moves for new player
         } else {
             targetPlayer.score = _score;
             targetPlayer.gameDuration = _gameDuration;
@@ -43,9 +45,7 @@ contract RecordKeeper {
 
     function setVerifyStatus(bool _verified) external returns (bool) {
         Player storage targetPlayer = players[msg.sender];
-        if (targetPlayer.playerAddress == address(0)) {
-            revert("Player not found");
-        }
+        require(targetPlayer.playerAddress != address(0), "Player not found"); // Use require for better readability
         targetPlayer.verified = _verified;
         emit PlayerVerificationStatusUpdated(msg.sender, _verified);
         return _verified;

@@ -22,7 +22,7 @@ contract RecordKeeperTest is Test {
             120,        // game duration
             "Easy",     // level
             10,         // lines cleared
-            "UDLR"      // moves
+            "Z0110"      // moves
         );
 
         // Retrieve player record
@@ -43,7 +43,7 @@ contract RecordKeeperTest is Test {
         assertEq(gameDuration, 120, "Game duration should be 120");
         assertEq(level, "Easy", "Level should be Easy");
         assertEq(linesCleared, 10, "Lines cleared should be 10");
-        assertEq(moves, "UDLR", "Moves should be UDLR");
+        assertEq(moves, "Z0110", "Moves should be Z0110");
         assertFalse(verified, "Player should not be verified by default");
     }
 
@@ -55,7 +55,7 @@ contract RecordKeeperTest is Test {
             120,        // game duration
             "Easy",     // level
             10,         // lines cleared
-            "UDLR"      // moves
+            "Z0110"      // moves
         );
 
         // Update record
@@ -95,7 +95,7 @@ contract RecordKeeperTest is Test {
             120,        // game duration
             "Easy",     // level
             10,         // lines cleared
-            "UDLR"      // moves
+            "Z0110"      // moves
         );
 
         // Set verification status
@@ -123,14 +123,14 @@ contract RecordKeeperTest is Test {
             120, 
             "Easy", 
             10, 
-            "UDLR"
+            "Z0110"
         );
         recordKeeper.setPlayerRecord(
             100,        // score
             120,        // game duration
             "Easy",     // level
             10,         // lines cleared
-            "UDLR"      // moves
+            "Z0110"      // moves
         );
     }
 
@@ -142,7 +142,7 @@ contract RecordKeeperTest is Test {
             120,        // game duration
             "Easy",     // level
             10,         // lines cleared
-            "UDLR"      // moves
+            "Z0110"      // moves
         );
 
         // Check verification status update event
@@ -155,23 +155,28 @@ contract RecordKeeperTest is Test {
     // Note: The leaderboard update logic is complex and might need more intricate testing
     // This is a basic test to ensure the function doesn't revert
     function testLeaderboardUpdateBasic() public {
-        vm.prank(player1);
-        recordKeeper.setPlayerRecord(
-            100,        // score
-            120,        // game duration
-            "Easy",     // level
-            10,         // lines cleared
-            "UDLR"      // moves
-        );
+    // Add first player
+    vm.prank(player1);
+    recordKeeper.setPlayerRecord(
+        100,        // score
+        120,        // game duration
+        "Easy",     // level
+        10,         // lines cleared
+        "UDLR"      // moves
+    );
 
-        // Leaderboard update is internal, so this indirectly tests it
-        vm.prank(player1);
-        recordKeeper.setPlayerRecord(
-            200,        // new score
-            240,        // new game duration
-            "Hard",     // new level
-            20,         // new lines cleared
-            "LRDU"      // new moves
-        );
+    // Add second player with a higher score
+    vm.prank(player2);
+    recordKeeper.setPlayerRecord(
+        200,        // score
+        240,        // game duration
+        "Hard",     // level
+        20,         // lines cleared
+        "LRDU"      // new moves
+    );
+
+    // Check leaderboard entries
+    address topPlayer = recordKeeper.leaderboard(200);
+        assertEq(topPlayer, player2, "Player2 should be at the top of the leaderboard");
     }
 }
